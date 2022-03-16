@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "vamsfe",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -39,5 +39,7 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "_id": "frontend@0.1.0",
+  "readme": "ERROR: No README data found!"
 }
