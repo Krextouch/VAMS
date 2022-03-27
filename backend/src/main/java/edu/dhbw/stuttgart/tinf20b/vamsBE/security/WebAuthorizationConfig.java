@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -17,50 +17,56 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final WebAuthEntryPoint webAuthEntryPoint;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserAuthorizationService webAuthorizationService;
 
     @Autowired
-    public WebAuthorizationConfig(UserDetailsService userDetailsService,
-                                  BCryptPasswordEncoder bCryptPasswordEncoder){
-        this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public WebAuthorizationConfig(JwtTokenProvider jwtTokenProvider,
+                                  UserAuthorizationService webAuthorizationService,
+                                  WebAuthEntryPoint webAuthEntryPoint) {
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.webAuthorizationService = webAuthorizationService;
+        this.webAuthEntryPoint = webAuthEntryPoint;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-    }
-
+    //Configure endpoints settings
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
+        //unauthorized forwarding
+        http.exceptionHandling().authenticationEntryPoint(webAuthEntryPoint);
         http
 
                 .authorizeRequests()
                      //Public uris
-                    .antMatchers( "/error", "/auth/api/v1/login", "/raspi/**").permitAll()
+                    .antMatchers( "/error", "/unauthorized", "/auth/api/v1/login", "/raspi/**").permitAll()
                     //Employee uris
                     .antMatchers("/employee/**").hasRole("EMPLOYEE")
                     //Office uris
                     .antMatchers("/office/**").hasRole("OFFICE")
                     .anyRequest().authenticated()
                     .and()
-                //if user isn't authorized
-                .formLogin()
-                    .loginPage("/unauthorized")
-                    .permitAll()
-                    .and()
-                .logout()
-                    .permitAll();
+                .httpBasic();
 
-        //filter video 1:04:44 https://www.youtube.com/watch?v=mYKf4pufQWA&t=3897s
+        http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebAuthenticationFilter authenticationFilter() {
+        return new WebAuthenticationFilter(this.jwtTokenProvider, this.webAuthorizationService);
     }
 }

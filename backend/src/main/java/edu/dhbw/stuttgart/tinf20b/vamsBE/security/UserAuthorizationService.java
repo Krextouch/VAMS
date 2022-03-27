@@ -2,25 +2,33 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.security;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.model.ResponseLogin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class WebAuthorizationService implements UserDetailsService {
+public class UserAuthorizationService implements UserDetailsService {
 
     private final EmployeeRepository employeeRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public WebAuthorizationService(EmployeeRepository employeeRepository){
+    public UserAuthorizationService(EmployeeRepository employeeRepository,
+                                    JwtTokenProvider jwtTokenProvider) {
         this.employeeRepository = employeeRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -43,20 +51,33 @@ public class WebAuthorizationService implements UserDetailsService {
         Collection<SimpleGrantedAuthority> authorities;
         if (employee.isHasOfficeRights()) {
 
-            authorities = List.of(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
-        } else {
             authorities = List.of(new SimpleGrantedAuthority("ROLE_EMPLOYEE"), new SimpleGrantedAuthority("ROLE_OFFICE"));
+        } else {
+            authorities = List.of(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
         }
 
         return new User(String.valueOf(employee.getEmail()), employee.getPassword(), authorities);
     }
 
-//        if (BCrypt.checkpw(password, employee.getPassword())) {
-//
-//        } else {
-//            throw new BadCredentialsException("Wrong password");
-//        }
-//
-//    }
+    public ResponseLogin getUserDetails(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Optional<Employee> employee = employeeRepository.findByEmail(user.getUsername());
+        String token = this.jwtTokenProvider.generateToken(authentication);
+        if (employee.isPresent()) {
+            return ResponseLogin.builder()
+                    .token(token)
+                    .expiration(this.jwtTokenProvider.getExpiration(token))
+                    .email(employee.get().getEmail())
+                    .nameTag(employee.get().getNameTag())
+                    .firstName(employee.get().getFirstName())
+                    .lastName(employee.get().getLastName())
+                    .hasDrivingLicense(employee.get().isHasDrivingLicense())
+                    .hasOfficeRights(employee.get().isHasOfficeRights())
+                    .build();
+        }
+        else {
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

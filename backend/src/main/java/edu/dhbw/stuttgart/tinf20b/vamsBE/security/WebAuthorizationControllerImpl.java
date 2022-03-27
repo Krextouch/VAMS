@@ -1,33 +1,40 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.security;
 
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.security.model.RequestLogin;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.model.ResponseLogin;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-public class WebAuthorizationControllerImpl implements  WebAuthorizationController{
+public class WebAuthorizationControllerImpl implements  WebAuthorizationController {
 
-    private final WebAuthorizationService webAuthorizationService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final EmployeeRepository employeeRepository;
+    private final UserAuthorizationService userAuthorizationService;
 
     @Autowired
-    public WebAuthorizationControllerImpl(WebAuthorizationService webAuthorizationService){
-        this.webAuthorizationService = webAuthorizationService;
+    public WebAuthorizationControllerImpl(AuthenticationManager authenticationManager,
+                                          JwtTokenProvider jwtTokenProvider,
+                                          EmployeeRepository employeeRepository,
+                                          UserAuthorizationService userAuthorizationService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.employeeRepository = employeeRepository;
+        this.userAuthorizationService = userAuthorizationService;
     }
 
-    //PostMethod
     @Override
-    public ResponseEntity login(@RequestBody RequestLogin requestLogin) {
-        return new ResponseEntity<>("Hi", HttpStatus.OK);
-        //this.webAuthorizationService.login(requestLogin.getUsername(), requestLogin.getPassword());
-    }
-
-    //GetMethod - Login can only made via Post Command
-    @Override
-    public ResponseEntity login() {
-        return new ResponseEntity<>("405: Method Not Allowed", HttpStatus.METHOD_NOT_ALLOWED);
+    public ResponseLogin login(@RequestBody RequestLogin requestLogin) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(requestLogin.getUsername(),requestLogin.getPassword())
+        );
+        return this.userAuthorizationService.getUserDetails(authentication);
     }
 
 }

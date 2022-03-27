@@ -14,6 +14,10 @@ public class OfficePortalControllerImpl implements OfficePortalController{
        this.vehicleService = vehicleService;
     }
 
+    @Override
+    public String ping() {
+        return "Hello Office";
+    }
 
     //delete prod only for test
     @Override
