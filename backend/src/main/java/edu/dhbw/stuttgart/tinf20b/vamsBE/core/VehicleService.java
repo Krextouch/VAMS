@@ -43,22 +43,4 @@ public class VehicleService {
         this.deviceRepository.save(device);
 
     }
-
-    public void createVehicle(Vehicle vehicle) {
-        Vehicle newVehicle = Vehicle.builder()
-                .vin(vehicle.getVin())
-                .licensePlate(vehicle.getLicensePlate())
-                .brand(vehicle.getBrand())
-                .model(vehicle.getModel())
-                .ps(vehicle.getPs())
-                .color(vehicle.getColor())
-                .firstRegistration(vehicle.getFirstRegistration())
-                .build();
-
-        this.vehicleRepository.save(newVehicle);
-    }
-
-    public void deleteVehicle(Vehicle vehicle) {
-        this.vehicleRepository.deleteById(vehicle.getVin());
-    }
 }
