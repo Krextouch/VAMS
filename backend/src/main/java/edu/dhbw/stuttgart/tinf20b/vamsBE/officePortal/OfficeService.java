@@ -36,8 +36,4 @@ public class OfficeService {
     public void deleteEmployee(Employee employee) {
         this.employeeRepository.deleteById(employee.getEmployeeId());
     }
-
-    public void updateEmployee(Employee employee) {
-        createEmployee(employee);
-    }
 }

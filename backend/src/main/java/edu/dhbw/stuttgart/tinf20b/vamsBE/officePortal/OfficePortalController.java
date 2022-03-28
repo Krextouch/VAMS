@@ -1,5 +1,6 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,4 +22,7 @@ public interface OfficePortalController {
 
     @PostMapping("/updateEmployee")
     void updateEmployee(@RequestBody Employee employee);
+
+    @PostMapping("/createVehicle")
+    void createVehicle(@RequestBody Vehicle vehicle);
 }

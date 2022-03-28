@@ -1,6 +1,7 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.VehicleService;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +42,11 @@ public class OfficePortalControllerImpl implements OfficePortalController{
 
     @Override
     public void updateEmployee(Employee employee) {
-        this.officeService.updateEmployee(employee);
+        this.officeService.createEmployee(employee);
+    }
+
+    @Override
+    public void createVehicle(Vehicle vehicle) {
+        this.vehicleService.createVehicle(vehicle);
     }
 }
