@@ -57,4 +57,8 @@ public class VehicleService {
 
         this.vehicleRepository.save(newVehicle);
     }
+
+    public void deleteVehicle(Vehicle vehicle) {
+        this.vehicleRepository.deleteById(vehicle.getVin());
+    }
 }
