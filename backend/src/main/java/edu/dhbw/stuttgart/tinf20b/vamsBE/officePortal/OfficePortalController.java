@@ -16,4 +16,6 @@ public interface OfficePortalController {
     @PostMapping("/createEmployee")
     void createEmployee(@RequestBody Employee employee);
 
+    @PostMapping("/deleteEmployee")
+    void deleteEmployee(@RequestBody Employee employee);
 }

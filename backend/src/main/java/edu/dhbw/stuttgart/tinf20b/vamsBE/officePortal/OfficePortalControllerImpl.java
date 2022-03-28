@@ -33,4 +33,9 @@ public class OfficePortalControllerImpl implements OfficePortalController{
     public void createEmployee(@RequestBody Employee employee) {
         this.officeService.createEmployee(employee);
     }
+
+    @Override
+    public void deleteEmployee(Employee employee) {
+        this.officeService.deleteEmployee(employee);
+    }
 }
