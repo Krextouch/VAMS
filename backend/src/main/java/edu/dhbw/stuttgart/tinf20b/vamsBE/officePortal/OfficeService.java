@@ -30,11 +30,14 @@ public class OfficeService {
                 .hasDrivingLicense(employee.isHasDrivingLicense())
                 .hasOfficeRights(employee.isHasOfficeRights())
                 .build();
-
         this.employeeRepository.save(newEmployee);
     }
 
     public void deleteEmployee(Employee employee) {
         this.employeeRepository.deleteById(employee.getEmployeeId());
+    }
+
+    public void updateEmployee(Employee employee) {
+        createEmployee(employee);
     }
 }

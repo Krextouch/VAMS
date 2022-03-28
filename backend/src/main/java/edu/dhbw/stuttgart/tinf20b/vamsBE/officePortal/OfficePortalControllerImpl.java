@@ -38,4 +38,9 @@ public class OfficePortalControllerImpl implements OfficePortalController{
     public void deleteEmployee(Employee employee) {
         this.officeService.deleteEmployee(employee);
     }
+
+    @Override
+    public void updateEmployee(Employee employee) {
+        this.officeService.updateEmployee(employee);
+    }
 }
