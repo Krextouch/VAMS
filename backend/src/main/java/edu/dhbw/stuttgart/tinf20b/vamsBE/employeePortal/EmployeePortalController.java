@@ -1,6 +1,6 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
-import edu.dhbw.stuttgart.tinf20b.vamsBE.security.model.RequestLogin;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -9,4 +9,7 @@ public interface EmployeePortalController {
 
     @GetMapping("/ping")
     String ping();
+
+    @PostMapping("/createReservation")
+    void createReservation(@RequestBody Reservation reservation);
 }
