@@ -28,4 +28,7 @@ public interface OfficePortalController {
 
     @PostMapping("/deleteVehicle")
     void deleteVehicle(@RequestBody Vehicle vehicle);
+
+    @PostMapping("/updateVehicle")
+    void updateVehicle(@RequestBody Vehicle vehicle);
 }

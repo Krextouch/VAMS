@@ -54,4 +54,9 @@ public class OfficePortalControllerImpl implements OfficePortalController{
     public void deleteVehicle(Vehicle vehicle) {
         this.officeService.deleteVehicle(vehicle);
     }
+
+    @Override
+    public void updateVehicle(Vehicle vehicle) {
+        this.officeService.createVehicle(vehicle);
+    }
 }
