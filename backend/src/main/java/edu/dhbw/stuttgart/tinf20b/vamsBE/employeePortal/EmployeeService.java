@@ -27,4 +27,8 @@ public class EmployeeService {
 
         this.reservationRepository.save(newReservation);
     }
+
+    public void deleteReservation(Reservation reservation) {
+        this.reservationRepository.deleteById(reservation.getId());
+    }
 }
