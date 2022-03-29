@@ -2,10 +2,10 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.core.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -26,4 +26,7 @@ public class Vehicle {
     private String color;
     @Column(name = "first_registration", nullable = false)
     private LocalDate firstRegistration;
+
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Reservation> reservation = new HashSet<>();
 }

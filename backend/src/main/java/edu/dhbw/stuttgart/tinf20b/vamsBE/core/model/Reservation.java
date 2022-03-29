@@ -18,11 +18,12 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne
-    @JoinColumn(name = "vin")
-    private Vehicle vehicle;
     @Column(name = "start_time_of_reservation")
     private LocalDateTime startTimeOfReservation;
     @Column(name = "end_time_of_reservation")
     private LocalDateTime endTimeOfReservation;
+
+    @ManyToOne
+    @JoinColumn(name = "vin")
+    private Vehicle vehicle;
 }
