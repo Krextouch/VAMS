@@ -1,6 +1,9 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.AvailableVehicleResponse;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationTimeframe;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,4 +21,7 @@ public interface EmployeePortalController {
 
     @PostMapping("/deleteReservation")
     void deleteReservation(@RequestBody Reservation reservation);
+
+    @PostMapping("/getAvailableVehicle")
+    AvailableVehicleResponse getAvailableVehicle(@RequestBody ReservationTimeframe reservationTimeframe);
 }

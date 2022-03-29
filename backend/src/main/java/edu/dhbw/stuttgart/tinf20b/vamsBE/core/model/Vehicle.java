@@ -5,11 +5,14 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Vehicle {
@@ -28,5 +31,5 @@ public class Vehicle {
     private LocalDate firstRegistration;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Reservation> reservation = new HashSet<>();
+    private List<Reservation> reservation = new LinkedList<>();
 }
