@@ -23,4 +23,9 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     public void createReservation(Reservation reservation) {
         this.employeeService.createReservation(reservation);
     }
+
+    @Override
+    public void updateReservation(Reservation reservation) {
+        this.employeeService.createReservation(reservation);
+    }
 }

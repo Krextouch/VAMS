@@ -12,4 +12,7 @@ public interface EmployeePortalController {
 
     @PostMapping("/createReservation")
     void createReservation(@RequestBody Reservation reservation);
+
+    @PostMapping("/updateReservation")
+    void updateReservation(@RequestBody Reservation reservation);
 }
