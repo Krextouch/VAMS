@@ -1,17 +1,16 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -39,4 +38,7 @@ public class Employee {
     private boolean hasDrivingLicense;
     @Column(name = "has_office_rights")
     private boolean hasOfficeRights;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Reservation> reservation = new LinkedList<>();
 }

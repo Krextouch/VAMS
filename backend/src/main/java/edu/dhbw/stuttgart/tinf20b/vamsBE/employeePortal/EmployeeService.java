@@ -35,6 +35,8 @@ public class EmployeeService {
                 .startTimeOfReservation(reservation.getStartTimeOfReservation())
                 .endTimeOfReservation(reservation.getEndTimeOfReservation())
                 .vehicle(reservation.getVehicle())
+                .employee(reservation.getEmployee())
+                .isVerified(employeeRepository.findEmployeeByEmployeeId(reservation.getEmployee().getEmployeeId()).isHasOfficeRights())
                 .build();
 
         this.reservationRepository.save(newReservation);
