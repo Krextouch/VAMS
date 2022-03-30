@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     @Value("${app.jwtSecret}")
     private String jwtSecret;
 
-    public String generateToken(String employeeEmail, List<String> roles){
+    public String generateToken(String employeeEmail, List<String> roles) {
         Instant now = Instant.now();
         Instant expiration = now.plus(10, ChronoUnit.HOURS);
         Map<String, Object> claims = new HashMap<>();
@@ -40,12 +40,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return generateToken(user.getUsername(), user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
     }
 
-    public String getUserMailFromToken(String token){
+    public String getUserMailFromToken(String token) {
         Claims claims = Jwts
                 .parser()
                 .setSigningKey(jwtSecret)
@@ -55,7 +55,7 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public LocalDateTime getExpiration(String token){
+    public LocalDateTime getExpiration(String token) {
         Claims claims = Jwts
                 .parser()
                 .setSigningKey(jwtSecret)
@@ -65,7 +65,7 @@ public class JwtTokenProvider {
         return claims.getExpiration().toInstant().atZone(ZoneOffset.UTC).toLocalDateTime();
     }
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;

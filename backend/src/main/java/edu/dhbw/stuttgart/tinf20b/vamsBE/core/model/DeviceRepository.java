@@ -8,6 +8,8 @@ import java.util.Optional;
 @Repository
 public interface DeviceRepository extends CrudRepository<Device, Integer> {
     Optional<Device> findById(int id);
+
     Optional<Device> findByVin(Vehicle vehicle);
+
     Optional<Device> findByToken(String token);
 }

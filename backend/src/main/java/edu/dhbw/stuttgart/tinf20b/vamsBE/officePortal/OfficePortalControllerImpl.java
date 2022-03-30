@@ -7,17 +7,16 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationRespo
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-public class OfficePortalControllerImpl implements OfficePortalController{
+public class OfficePortalControllerImpl implements OfficePortalController {
 
     private final VehicleService vehicleService;
     private final OfficeService officeService;
 
     @Autowired
-    public OfficePortalControllerImpl(VehicleService vehicleService, OfficeService officeService){
-       this.vehicleService = vehicleService;
+    public OfficePortalControllerImpl(VehicleService vehicleService, OfficeService officeService) {
+        this.vehicleService = vehicleService;
         this.officeService = officeService;
     }
 
@@ -28,7 +27,7 @@ public class OfficePortalControllerImpl implements OfficePortalController{
 
     //delete prod only for test
     @Override
-    public void testCar(){
+    public void testCar() {
         this.vehicleService.setVehicleTest();
     }
 

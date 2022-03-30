@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-public class WebAuthorizationControllerImpl implements  WebAuthorizationController {
+public class WebAuthorizationControllerImpl implements WebAuthorizationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
@@ -32,7 +32,7 @@ public class WebAuthorizationControllerImpl implements  WebAuthorizationControll
     @Override
     public ResponseLogin login(@RequestBody RequestLogin requestLogin) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestLogin.getUsername(),requestLogin.getPassword())
+                new UsernamePasswordAuthenticationToken(requestLogin.getUsername(), requestLogin.getPassword())
         );
         return this.userAuthorizationService.getUserDetails(authentication);
     }

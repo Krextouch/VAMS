@@ -71,16 +71,16 @@ public class OfficeService {
     }
 
     public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
-        if(employeeRepository.findEmployeeByEmployeeId(verifyReservationRequest.getOfficeEmployeeId()).isHasOfficeRights()) {
-            if(!verifyReservationRequest.isVerifyIt()) {
+        if (employeeRepository.findByEmployeeId(verifyReservationRequest.getOfficeEmployeeId()).get().isHasOfficeRights()) {
+            if (!verifyReservationRequest.isVerifyIt()) {
                 this.reservationRepository.deleteById(verifyReservationRequest.getReservationId());
             } else {
                 Reservation reservation = Reservation.builder()
                         .id(verifyReservationRequest.getReservationId())
-                        .startTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).getStartTimeOfReservation())
-                        .endTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).getEndTimeOfReservation())
-                        .vehicle(reservationRepository.findById(verifyReservationRequest.getReservationId()).getVehicle())
-                        .employee(reservationRepository.findById(verifyReservationRequest.getReservationId()).getEmployee())
+                        .startTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getStartTimeOfReservation())
+                        .endTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEndTimeOfReservation())
+                        .vehicle(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getVehicle())
+                        .employee(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEmployee())
                         .isVerified(verifyReservationRequest.isVerifyIt())
                         .build();
 
@@ -91,10 +91,10 @@ public class OfficeService {
 
     public OpenReservationResponse openReservationRequest() {
         List<Reservation> allVehicleWithoutVerification = new ArrayList<>();
-        allVehicleWithoutVerification.addAll(reservationRepository.findByIsVerifiedFalse());
+        allVehicleWithoutVerification.addAll(reservationRepository.findByIsVerifiedFalse().get());
         List<OpenReservationParam> openReservationParamList = new ArrayList<>();
 
-        for(Reservation reservation : allVehicleWithoutVerification) {
+        for (Reservation reservation : allVehicleWithoutVerification) {
             OpenReservationParam openReservationParam = new OpenReservationParam();
 
             openReservationParam.setReservationId(reservation.getId());

@@ -11,9 +11,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationTimefra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -36,7 +34,7 @@ public class EmployeeService {
                 .endTimeOfReservation(reservation.getEndTimeOfReservation())
                 .vehicle(reservation.getVehicle())
                 .employee(reservation.getEmployee())
-                .isVerified(employeeRepository.findEmployeeByEmployeeId(reservation.getEmployee().getEmployeeId()).isHasOfficeRights())
+                .isVerified(employeeRepository.findByEmployeeId(reservation.getEmployee().getEmployeeId()).get().isHasOfficeRights())
                 .build();
 
         this.reservationRepository.save(newReservation);
@@ -52,17 +50,17 @@ public class EmployeeService {
 
         for (Vehicle vehicle : vehicleRepository.findAll()) {
             vehicleAvailable = true;
-            for(Reservation reservation : vehicle.getReservation()) {
-                if((reservation.getEndTimeOfReservation().isAfter(reservationTimeframe.getStartTimeOfReservation())
-                && reservation.getStartTimeOfReservation().isBefore(reservationTimeframe.getStartTimeOfReservation()))
-                || (reservation.getEndTimeOfReservation().isAfter(reservationTimeframe.getEndTimeOfReservation())
-                && reservation.getStartTimeOfReservation().isBefore(reservationTimeframe.getEndTimeOfReservation()))) {
+            for (Reservation reservation : vehicle.getReservation()) {
+                if ((reservation.getEndTimeOfReservation().isAfter(reservationTimeframe.getStartTimeOfReservation())
+                        && reservation.getStartTimeOfReservation().isBefore(reservationTimeframe.getStartTimeOfReservation()))
+                        || (reservation.getEndTimeOfReservation().isAfter(reservationTimeframe.getEndTimeOfReservation())
+                        && reservation.getStartTimeOfReservation().isBefore(reservationTimeframe.getEndTimeOfReservation()))) {
                     vehicleAvailable = false;
                     break;
                 }
             }
 
-            if(vehicleAvailable) {
+            if (vehicleAvailable) {
                 AvailableVehicleParam availableVehicleParam = new AvailableVehicleParam();
                 availableVehicleParam.setBrand(vehicle.getBrand());
                 availableVehicleParam.setColor(vehicle.getColor());

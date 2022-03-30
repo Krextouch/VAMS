@@ -20,7 +20,7 @@ public class WebAuthenticationFilter extends OncePerRequestFilter {
     private UserAuthorizationService webAuthorizationService;
 
     @Autowired
-    public WebAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserAuthorizationService webAuthorizationService){
+    public WebAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserAuthorizationService webAuthorizationService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.webAuthorizationService = webAuthorizationService;
     }

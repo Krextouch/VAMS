@@ -41,14 +41,14 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
         http
 
                 .authorizeRequests()
-                     //Public uris
-                    .antMatchers( "/error", "/unauthorized", "/auth/api/v1/login", "/raspi/**").permitAll()
-                    //Employee uris
-                    .antMatchers("/employee/**").hasRole("EMPLOYEE")
-                    //Office uris
-                    .antMatchers("/office/**").hasRole("OFFICE")
-                    .anyRequest().authenticated()
-                    .and()
+                //Public uris
+                .antMatchers("/error", "/unauthorized", "/auth/api/v1/login", "/raspi/**").permitAll()
+                //Employee uris
+                .antMatchers("/employee/**").hasRole("EMPLOYEE")
+                //Office uris
+                .antMatchers("/office/**").hasRole("OFFICE")
+                .anyRequest().authenticated()
+                .and()
                 .httpBasic();
 
         http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);

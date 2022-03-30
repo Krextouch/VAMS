@@ -74,8 +74,7 @@ public class UserAuthorizationService implements UserDetailsService {
                     .hasDrivingLicense(employee.get().isHasDrivingLicense())
                     .hasOfficeRights(employee.get().isHasOfficeRights())
                     .build();
-        }
-        else {
+        } else {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
