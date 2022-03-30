@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends CrudRepository<Reservation, Integer> {
     Reservation findById(int id);
+    List<Reservation> findByIsVerifiedFalse();
 }

@@ -7,10 +7,15 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.EmployeeService;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationParam;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OfficeService {
@@ -82,5 +87,24 @@ public class OfficeService {
                 this.reservationRepository.save(reservation);
             }
         }
+    }
+
+    public OpenReservationResponse openReservationRequest() {
+        List<Reservation> allVehicleWithoutVerification = new ArrayList<>();
+        allVehicleWithoutVerification.addAll(reservationRepository.findByIsVerifiedFalse());
+        List<OpenReservationParam> openReservationParamList = new ArrayList<>();
+
+        for(Reservation reservation : allVehicleWithoutVerification) {
+            OpenReservationParam openReservationParam = new OpenReservationParam();
+
+            openReservationParam.setReservationId(reservation.getId());
+            openReservationParam.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
+            openReservationParam.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
+            openReservationParam.setVehicleVin(reservation.getVehicle().getVin());
+
+            openReservationParamList.add(openReservationParam);
+        }
+
+        return new OpenReservationResponse(openReservationParamList);
     }
 }
