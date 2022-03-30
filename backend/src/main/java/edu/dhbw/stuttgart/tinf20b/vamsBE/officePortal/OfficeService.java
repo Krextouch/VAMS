@@ -1,9 +1,13 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.EmployeeService;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -13,11 +17,13 @@ public class OfficeService {
 
     private final EmployeeRepository employeeRepository;
     private final VehicleRepository vehicleRepository;
+    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public OfficeService(EmployeeRepository employeeRepository, VehicleRepository vehicleRepository) {
+    public OfficeService(EmployeeRepository employeeRepository, VehicleRepository vehicleRepository, ReservationRepository reservationRepository, EmployeeService employeeService) {
         this.employeeRepository = employeeRepository;
         this.vehicleRepository = vehicleRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public void createEmployee(Employee employee) {
@@ -57,5 +63,24 @@ public class OfficeService {
 
     public void deleteVehicle(Vehicle vehicle) {
         this.vehicleRepository.deleteById(vehicle.getVin());
+    }
+
+    public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
+        if(employeeRepository.findEmployeeByEmployeeId(verifyReservationRequest.getOfficeEmployeeId()).isHasOfficeRights()) {
+            if(!verifyReservationRequest.isVerifyIt()) {
+                this.reservationRepository.deleteById(verifyReservationRequest.getReservationId());
+            } else {
+                Reservation reservation = Reservation.builder()
+                        .id(verifyReservationRequest.getReservationId())
+                        .startTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).getStartTimeOfReservation())
+                        .endTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).getEndTimeOfReservation())
+                        .vehicle(reservationRepository.findById(verifyReservationRequest.getReservationId()).getVehicle())
+                        .employee(reservationRepository.findById(verifyReservationRequest.getReservationId()).getEmployee())
+                        .isVerified(verifyReservationRequest.isVerifyIt())
+                        .build();
+
+                this.reservationRepository.save(reservation);
+            }
+        }
     }
 }

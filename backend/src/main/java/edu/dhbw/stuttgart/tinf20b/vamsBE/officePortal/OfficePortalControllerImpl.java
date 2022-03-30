@@ -3,6 +3,7 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.VehicleService;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,5 +59,10 @@ public class OfficePortalControllerImpl implements OfficePortalController{
     @Override
     public void updateVehicle(Vehicle vehicle) {
         this.officeService.createVehicle(vehicle);
+    }
+
+    @Override
+    public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
+        this.officeService.verifyReservation(verifyReservationRequest);
     }
 }

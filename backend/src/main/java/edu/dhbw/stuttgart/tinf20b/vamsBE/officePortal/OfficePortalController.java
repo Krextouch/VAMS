@@ -2,6 +2,7 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,4 +32,7 @@ public interface OfficePortalController {
 
     @PostMapping("/updateVehicle")
     void updateVehicle(@RequestBody Vehicle vehicle);
+
+    @PostMapping("/verifyReservation")
+    void verifyReservation(@RequestBody VerifyReservationRequest verifyReservationRequest);
 }
