@@ -71,22 +71,21 @@ public class OfficeService {
     }
 
     public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
-        if (employeeRepository.findByEmployeeId(verifyReservationRequest.getOfficeEmployeeId()).get().isHasOfficeRights()) {
-            if (!verifyReservationRequest.isVerifyIt()) {
-                this.reservationRepository.deleteById(verifyReservationRequest.getReservationId());
-            } else {
-                Reservation reservation = Reservation.builder()
-                        .id(verifyReservationRequest.getReservationId())
-                        .startTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getStartTimeOfReservation())
-                        .endTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEndTimeOfReservation())
-                        .vehicle(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getVehicle())
-                        .employee(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEmployee())
-                        .isVerified(verifyReservationRequest.isVerifyIt())
-                        .build();
+        if (!verifyReservationRequest.isVerifyIt()) {
+            this.reservationRepository.deleteById(verifyReservationRequest.getReservationId());
+        } else {
+            Reservation reservation = Reservation.builder()
+                    .id(verifyReservationRequest.getReservationId())
+                    .startTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getStartTimeOfReservation())
+                    .endTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEndTimeOfReservation())
+                    .vehicle(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getVehicle())
+                    .employee(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEmployee())
+                    .isVerified(verifyReservationRequest.isVerifyIt())
+                    .build();
 
-                this.reservationRepository.save(reservation);
-            }
+            this.reservationRepository.save(reservation);
         }
+
     }
 
     public OpenReservationResponse openReservationRequest() {

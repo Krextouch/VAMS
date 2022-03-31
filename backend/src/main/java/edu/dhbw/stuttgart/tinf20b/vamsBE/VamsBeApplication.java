@@ -9,7 +9,5 @@ public class VamsBeApplication {
     public static void main(String[] args) {
         SpringApplication.run(VamsBeApplication.class, args);
     }
-
-
 }
 

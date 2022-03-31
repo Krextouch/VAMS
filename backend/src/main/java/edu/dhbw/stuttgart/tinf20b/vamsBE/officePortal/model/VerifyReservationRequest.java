@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VerifyReservationRequest {
 
-    private int officeEmployeeId;
     private int reservationId;
     private boolean verifyIt;
 }
