@@ -1,5 +1,7 @@
-package edu.dhbw.stuttgart.tinf20b.vamsBE.core.model;
+package edu.dhbw.stuttgart.tinf20b.vamsBE.raspi.model;
 
+import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.raspi.model.Device;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

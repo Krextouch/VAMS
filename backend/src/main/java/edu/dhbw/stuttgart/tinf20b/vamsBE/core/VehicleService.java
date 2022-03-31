@@ -1,7 +1,7 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.core;
 
-import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Device;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.DeviceRepository;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.raspi.model.Device;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.raspi.model.DeviceRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
