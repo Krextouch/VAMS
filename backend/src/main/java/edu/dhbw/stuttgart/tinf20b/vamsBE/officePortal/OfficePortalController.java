@@ -13,9 +13,6 @@ public interface OfficePortalController {
     @GetMapping("/ping")
     String ping();
 
-    @GetMapping("/testCar")
-    void testCar();
-
     @PostMapping("/createEmployee")
     void createEmployee(@RequestBody Employee employee);
 

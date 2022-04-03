@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public interface EmployeePortalController {
 
     @GetMapping("/ping")
-    String ping();
+    String ping(@RequestHeader("Authorization") String authorization);
 
     @PostMapping("/createReservation")
     void createReservation(@RequestBody Reservation reservation);

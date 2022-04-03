@@ -25,12 +25,6 @@ public class OfficePortalControllerImpl implements OfficePortalController {
         return "Hello Office";
     }
 
-    //delete prod only for test
-    @Override
-    public void testCar() {
-        this.vehicleService.setVehicleTest();
-    }
-
     @Override
     public void createEmployee(Employee employee) {
         this.officeService.createEmployee(employee);

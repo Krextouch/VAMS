@@ -3,8 +3,12 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.AvailableVehicleResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationTimeframe;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.JwtTokenProvider;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.UserAuthorizationService;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.WebAuthorizationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Controller
 public class EmployeePortalControllerImpl implements EmployeePortalController {
@@ -17,8 +21,10 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     }
 
     @Override
-    public String ping() {
-        return "Hello Employee";
+    public String ping(@RequestHeader("Authorization") String authorization) {
+        return "Hello " +
+                this.employeeService.getEmployeeFromToken(authorization).getFirstName() + " " +
+                this.employeeService.getEmployeeFromToken(authorization).getLastName();
     }
 
     @Override
