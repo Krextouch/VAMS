@@ -4,7 +4,6 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.EmployeeService;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationParam;
@@ -25,7 +24,7 @@ public class OfficeService {
     private final ReservationRepository reservationRepository;
 
     @Autowired
-    public OfficeService(EmployeeRepository employeeRepository, VehicleRepository vehicleRepository, ReservationRepository reservationRepository, EmployeeService employeeService) {
+    public OfficeService(EmployeeRepository employeeRepository, VehicleRepository vehicleRepository, ReservationRepository reservationRepository) {
         this.employeeRepository = employeeRepository;
         this.vehicleRepository = vehicleRepository;
         this.reservationRepository = reservationRepository;

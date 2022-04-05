@@ -35,20 +35,26 @@ public class EmployeeService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public void createReservation(Reservation reservation) {
+    public void createReservation(Reservation reservation, String authorization) {
+        Employee employee = getEmployeeFromToken(authorization);
         Reservation newReservation = Reservation.builder()
                 .startTimeOfReservation(reservation.getStartTimeOfReservation())
                 .endTimeOfReservation(reservation.getEndTimeOfReservation())
                 .vehicle(reservation.getVehicle())
-                .employee(reservation.getEmployee())
-                .isVerified(employeeRepository.findByEmployeeId(reservation.getEmployee().getEmployeeId()).get().isHasOfficeRights())
+                .employee(employee)
+                .isVerified(employee.isHasOfficeRights())
                 .build();
 
         this.reservationRepository.save(newReservation);
     }
 
-    public void deleteReservation(Reservation reservation) {
-        //Es dürfen nur eigene Reservations gelöscht werden. Mach bitte ein Check, ob es die Reservation vom ankommenden User ist.
+    public void deleteReservation(Reservation reservation, String authorization) {
+        Employee employee = getEmployeeFromToken(authorization);
+        if (!(employee.getEmployeeId() == reservation.getEmployee().getEmployeeId())) {
+            return;
+        } else if (!employee.isHasOfficeRights()) {
+            return;
+        }
         this.reservationRepository.deleteById(reservation.getId());
     }
 
@@ -86,7 +92,7 @@ public class EmployeeService {
     public Employee getEmployeeFromToken(String token) {
 
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            token =  token.substring(7);
+            token = token.substring(7);
         } else {
             throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "No token found");
         }
@@ -100,5 +106,23 @@ public class EmployeeService {
         } else {
             throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
+    }
+
+    public SingleEmployeeReservationResponse getReservatedVehicle(String authorization) {
+        List<SingleEmployeeReservationParam> responseSerp = new ArrayList<>();
+
+        for(Reservation reservation : reservationRepository.findAllByEmployee(getEmployeeFromToken(authorization)).get()) {
+            SingleEmployeeReservationParam serp = new SingleEmployeeReservationParam();
+
+            serp.setId(reservation.getId());
+            serp.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
+            serp.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
+            serp.setIsVerified(reservation.getIsVerified());
+            serp.setVehicleVin(reservation.getVehicle().getVin());
+
+            responseSerp.add(serp);
+        }
+
+        return new SingleEmployeeReservationResponse(responseSerp);
     }
 }
