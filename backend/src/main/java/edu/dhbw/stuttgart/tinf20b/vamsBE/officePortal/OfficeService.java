@@ -6,9 +6,8 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationParam;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationParam;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -104,5 +103,43 @@ public class OfficeService {
         }
 
         return new OpenReservationResponse(openReservationParamList);
+    }
+
+    public AllEmployeeResponse allEmployee() {
+        List<AllEmployeeParam> employeeList = new ArrayList<>();
+
+        for (Employee employee : employeeRepository.findAll()) {
+            List<ReservationParam> reservationList = new ArrayList<>();
+            for (Reservation reservation : employee.getReservation()) {
+                ReservationParam reservationParam = new ReservationParam();
+
+                reservationParam.setId(reservation.getId());
+                reservationParam.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
+                reservationParam.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
+                reservationParam.setIsVerified(reservation.getIsVerified());
+                reservationParam.setVehicleVin(reservation.getVehicle().getVin());
+                reservationParam.setEmployeeId(reservation.getEmployee().getEmployeeId());
+
+                reservationList.add(reservationParam);
+            }
+
+            AllEmployeeParam addEmployee = new AllEmployeeParam();
+            addEmployee.setEmployeeId(employee.getEmployeeId());
+            addEmployee.setFirstName(employee.getFirstName());
+            addEmployee.setLastName(employee.getLastName());
+            addEmployee.setEmail(employee.getEmail());
+            addEmployee.setNameTag(employee.getNameTag());
+            addEmployee.setPassword(employee.getPassword());
+            addEmployee.setWorkCard(employee.getWorkCard());
+            addEmployee.setBirthday(employee.getBirthday());
+            addEmployee.setBirthplace(employee.getBirthplace());
+            addEmployee.setHasOfficeRights(employee.isHasOfficeRights());
+            addEmployee.setHasDrivingLicense(employee.isHasDrivingLicense());
+            addEmployee.setReservation(reservationList);
+
+            employeeList.add(addEmployee);
+        }
+
+        return new AllEmployeeResponse(employeeList);
     }
 }
