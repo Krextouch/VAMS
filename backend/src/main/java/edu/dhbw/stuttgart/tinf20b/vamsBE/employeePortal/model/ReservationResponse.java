@@ -1,6 +1,5 @@
-package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model;
+package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model;
 
-import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -1,4 +1,4 @@
-package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model;
+package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,4 +14,5 @@ public class ReservationParam {
     private LocalDateTime endTimeOfReservation;
     private Boolean isVerified;
     private String vehicleVin;
+    private int employeeId;
 }

@@ -6,7 +6,9 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.*;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationParam;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -102,23 +104,5 @@ public class OfficeService {
         }
 
         return new OpenReservationResponse(openReservationParamList);
-    }
-
-    public ReservationResponse allReservations() {
-        List<ReservationParam> reservationParam = new ArrayList<>();
-
-        for(Reservation reservation : reservationRepository.findAll()) {
-            ReservationParam rP = new ReservationParam();
-
-            rP.setId(reservation.getId());
-            rP.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
-            rP.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
-            rP.setIsVerified(reservation.getIsVerified());
-            rP.setVehicleVin(reservation.getVehicle().getVin());
-
-            reservationParam.add(rP);
-        }
-
-        return new ReservationResponse(reservationParam);
     }
 }

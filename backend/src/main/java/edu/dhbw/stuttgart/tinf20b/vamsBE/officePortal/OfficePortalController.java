@@ -1,10 +1,8 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
-import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.ReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +36,4 @@ public interface OfficePortalController {
 
     @PostMapping("/openReservationRequest")
     OpenReservationResponse openReservationRequest();
-
-    @PostMapping("/allReservations")
-    ReservationResponse allReservations();
 }

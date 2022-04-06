@@ -1,9 +1,7 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.AvailableVehicleResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.SingleEmployeeReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationTimeframe;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,4 +25,7 @@ public interface EmployeePortalController {
 
     @PostMapping("/getReservatedVehicle")
     SingleEmployeeReservationResponse getReservatedVehicle(@RequestHeader("Authorization") String authorization);
+
+    @PostMapping("/allReservations")
+    ReservationResponse allReservations(@RequestBody ReservationFilter reservationFilter, @RequestHeader("Authorization") String authorization);
 }

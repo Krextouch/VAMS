@@ -111,7 +111,7 @@ public class EmployeeService {
     public SingleEmployeeReservationResponse getReservatedVehicle(String authorization) {
         List<SingleEmployeeReservationParam> responseSerp = new ArrayList<>();
 
-        for(Reservation reservation : reservationRepository.findAllByEmployee(getEmployeeFromToken(authorization)).get()) {
+        for (Reservation reservation : reservationRepository.findAllByEmployee(getEmployeeFromToken(authorization)).get()) {
             SingleEmployeeReservationParam serp = new SingleEmployeeReservationParam();
 
             serp.setId(reservation.getId());
@@ -124,5 +124,87 @@ public class EmployeeService {
         }
 
         return new SingleEmployeeReservationResponse(responseSerp);
+    }
+
+    public ReservationResponse allReservations(ReservationFilter reservationFilter, String authorization) {
+        List<ReservationParam> reservationParamList = new ArrayList<>();
+        Employee employee = getEmployeeFromToken(authorization);
+
+        for (Reservation reservation : reservationRepository.findAll()) {
+            if (!(reservationFilter.isShowAllEmployees() && employee.isHasOfficeRights())) {
+                if (!(employee.equals(reservation.getEmployee()))) continue;
+            }
+            ReservationParam rP = new ReservationParam();
+
+            rP.setId(reservation.getId());
+            rP.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
+            rP.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
+            rP.setIsVerified(reservation.getIsVerified());
+            rP.setVehicleVin(reservation.getVehicle().getVin());
+            rP.setEmployeeId(reservation.getEmployee().getEmployeeId());
+
+            reservationParamList.add(rP);
+        }
+
+        return new ReservationResponse(applyFilters(reservationParamList, reservationFilter));
+    }
+
+    public List<ReservationParam> applyFilters(List<ReservationParam> reservationParamList, ReservationFilter reservationFilter) {
+
+        if (reservationFilter.getStartTimeFrame() != null) {
+            List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
+            int i = 0;
+            int removedObjects = 0;
+            for (ReservationParam tmpReservationParam : tmpReservationParamList) {
+                if (!(reservationFilter.getStartTimeFrame().isBefore(tmpReservationParam.getStartTimeOfReservation())
+                        || reservationFilter.getStartTimeFrame().isEqual(tmpReservationParam.getStartTimeOfReservation()))) {
+                    reservationParamList.remove(i - removedObjects);
+                    removedObjects++;
+                }
+                i++;
+            }
+        }
+
+        if (reservationFilter.getEndTimeFrame() != null) {
+            List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
+            int i = 0;
+            int removedObjects = 0;
+            for (ReservationParam tmpReservationParam : tmpReservationParamList) {
+                if (!(reservationFilter.getEndTimeFrame().isAfter(tmpReservationParam.getEndTimeOfReservation())
+                        || reservationFilter.getEndTimeFrame().isEqual(tmpReservationParam.getEndTimeOfReservation()))) {
+                    reservationParamList.remove(i - removedObjects);
+                    removedObjects++;
+                }
+                i++;
+            }
+        }
+
+        if (reservationFilter.getIsVerified() != null) {
+            List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
+            int i = 0;
+            int removedObjects = 0;
+            for (ReservationParam tmpReservationParam : tmpReservationParamList) {
+                if (!(reservationFilter.getIsVerified() == tmpReservationParam.getIsVerified())) {
+                    reservationParamList.remove(i - removedObjects);
+                    removedObjects++;
+                }
+                i++;
+            }
+        }
+
+        if (reservationFilter.getVehicleVin() != null) {
+            List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
+            int i = 0;
+            int removedObjects = 0;
+            for (ReservationParam tmpReservationParam : tmpReservationParamList) {
+                if (!(reservationFilter.getVehicleVin().equals(tmpReservationParam.getVehicleVin()))) {
+                    reservationParamList.remove(i - removedObjects);
+                    removedObjects++;
+                }
+                i++;
+            }
+        }
+
+        return reservationParamList;
     }
 }

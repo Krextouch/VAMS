@@ -2,9 +2,7 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.AvailableVehicleResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.SingleEmployeeReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationTimeframe;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -51,5 +49,10 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     @Override
     public SingleEmployeeReservationResponse getReservatedVehicle(String authorization) {
         return this.employeeService.getReservatedVehicle(authorization);
+    }
+
+    @Override
+    public ReservationResponse allReservations(ReservationFilter reservationFilter, String authorization) {
+        return this.employeeService.allReservations(reservationFilter, authorization);
     }
 }

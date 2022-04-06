@@ -5,7 +5,6 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.ReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -67,10 +66,5 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     @Override
     public OpenReservationResponse openReservationRequest() {
         return this.officeService.openReservationRequest();
-    }
-
-    @Override
-    public ReservationResponse allReservations() {
-        return officeService.allReservations();
     }
 }
