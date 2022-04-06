@@ -28,4 +28,7 @@ public interface EmployeePortalController {
 
     @PostMapping("/allReservations")
     ReservationResponse allReservations(@RequestBody ReservationFilter reservationFilter, @RequestHeader("Authorization") String authorization);
+
+    @PostMapping("/passwordReset")
+    String passwordReset(@RequestBody PasswordResetParam passwordResetParam);
 }

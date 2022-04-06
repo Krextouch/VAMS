@@ -8,13 +8,18 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class EmployeeService {
@@ -206,5 +211,50 @@ public class EmployeeService {
         }
 
         return reservationParamList;
+    }
+
+    public String passwordReset(PasswordResetParam passwordResetParam) {
+        String name = passwordResetParam.getName();
+        String newPassword = "";
+        Employee employee;
+
+        if (name.contains("@")) {
+            employee = employeeRepository.findByEmail(name).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
+        } else if (name.matches("^[0-9]*$")) {
+            employee = employeeRepository.findByEmployeeId(Integer.parseInt(name)).orElseThrow(() -> new UsernameNotFoundException("Employee id not found"));
+        } else {
+            employee = employeeRepository.findByNameTag(name).orElseThrow(() -> new UsernameNotFoundException("Name tag not found"));
+        }
+
+        if(!(employee == null)) {
+            int leftLimit = 48; // numeral '0'
+            int rightLimit = 122; // letter 'z'
+            int targetStringLength = 32;
+            Random random = new Random();
+
+            newPassword = random.ints(leftLimit, rightLimit + 1)
+                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                    .limit(targetStringLength)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+
+            Employee updatedEmployee = Employee.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .email(employee.getEmail())
+                    .nameTag(employee.getNameTag())
+                    .password(BCrypt.hashpw(newPassword, BCrypt.gensalt()))
+                    .workCard(employee.getWorkCard())
+                    .birthday(employee.getBirthday())
+                    .birthplace(employee.getBirthplace())
+                    .hasDrivingLicense(employee.isHasDrivingLicense())
+                    .hasOfficeRights(employee.isHasOfficeRights())
+                    .reservation(employee.getReservation())
+                    .build();
+
+            this.employeeRepository.save(updatedEmployee);
+        }
+        return newPassword;
     }
 }

@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public class EmployeePortalControllerImpl implements EmployeePortalController {
 
     private final EmployeeService employeeService;
-    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public EmployeePortalControllerImpl(EmployeeService employeeService, ReservationRepository reservationRepository) {
+    public EmployeePortalControllerImpl(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.reservationRepository = reservationRepository;
     }
 
     @Override
@@ -54,5 +52,10 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     @Override
     public ReservationResponse allReservations(ReservationFilter reservationFilter, String authorization) {
         return this.employeeService.allReservations(reservationFilter, authorization);
+    }
+
+    @Override
+    public String passwordReset(PasswordResetParam passwordResetParam) {
+        return employeeService.passwordReset(passwordResetParam);
     }
 }
