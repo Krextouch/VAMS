@@ -12,10 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +97,7 @@ public class EmployeeService {
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             token = token.substring(7);
         } else {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "No token found");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No token found");
         }
 
         String email = jwtTokenProvider.getUserMailFromToken(token);
@@ -109,7 +107,7 @@ public class EmployeeService {
         if (employee.isPresent()) {
             return employee.get();
         } else {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Invalid token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
     }
 
