@@ -78,5 +78,4 @@ public class UserAuthorizationService implements UserDetailsService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

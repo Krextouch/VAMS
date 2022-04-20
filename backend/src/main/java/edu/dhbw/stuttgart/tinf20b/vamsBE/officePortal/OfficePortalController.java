@@ -2,6 +2,7 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
@@ -24,7 +25,7 @@ public interface OfficePortalController {
     void updateEmployee(@RequestBody Employee employee);
 
     @PostMapping("/allEmployee")
-    AllEmployeeResponse allEmployee();
+    AllEmployeeResponse allEmployee(@RequestBody AllEmployeeFilter allEmployeeFilter);
 
     @PostMapping("/createVehicle")
     void createVehicle(@RequestBody Vehicle vehicle);

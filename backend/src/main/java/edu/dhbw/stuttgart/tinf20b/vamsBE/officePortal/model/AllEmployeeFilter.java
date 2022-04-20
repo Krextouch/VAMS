@@ -5,16 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpenReservationParam {
+public class AllEmployeeFilter {
 
-    private int reservationId;
-    private LocalDateTime startTimeOfReservation;
-    private LocalDateTime endTimeOfReservation;
-    private String vehicleVin;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String nameTag;
 }

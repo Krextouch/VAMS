@@ -8,7 +8,6 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationParam;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.*;
-import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -106,7 +105,7 @@ public class OfficeService {
         return new OpenReservationResponse(openReservationParamList);
     }
 
-    public AllEmployeeResponse allEmployee() {
+    public AllEmployeeResponse allEmployee(AllEmployeeFilter allEmployeeFilter) {
         List<AllEmployeeParam> employeeList = new ArrayList<>();
 
         for (Employee employee : employeeRepository.findAll()) {
@@ -142,6 +141,75 @@ public class OfficeService {
             employeeList.add(addEmployee);
         }
 
-        return new AllEmployeeResponse(employeeList);
+        return new AllEmployeeResponse(applyFilters(employeeList, allEmployeeFilter));
+    }
+
+    private List<AllEmployeeParam> applyFilters(List<AllEmployeeParam> allEmployeeParamList, AllEmployeeFilter allEmployeeFilter) {
+
+        //firstName
+        if (allEmployeeFilter.getFirstName() != null) {
+            if(!(allEmployeeFilter.getFirstName().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getFirstName().toLowerCase().contains(allEmployeeFilter.getFirstName().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        //lastName
+        if (allEmployeeFilter.getLastName() != null) {
+            if(!(allEmployeeFilter.getLastName().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getLastName().toLowerCase().contains(allEmployeeFilter.getLastName().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        //email
+        if (allEmployeeFilter.getEmail() != null) {
+            if(!(allEmployeeFilter.getEmail().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getEmail().toLowerCase().contains(allEmployeeFilter.getEmail().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        //nameTag
+        if (allEmployeeFilter.getNameTag() != null) {
+            if(!(allEmployeeFilter.getNameTag().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getNameTag().toLowerCase().contains(allEmployeeFilter.getNameTag().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        return allEmployeeParamList;
     }
 }

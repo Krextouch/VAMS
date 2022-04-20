@@ -2,6 +2,7 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
@@ -39,8 +40,8 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public AllEmployeeResponse allEmployee() {
-        return this.officeService.allEmployee();
+    public AllEmployeeResponse allEmployee(AllEmployeeFilter allEmployeeFilter) {
+        return this.officeService.allEmployee(allEmployeeFilter);
     }
 
     @Override
