@@ -34,20 +34,4 @@ public class ErrorPage implements ErrorController {
                 .build();
     }
 
-    /*
-
-    //Returns HTML
-    @RequestMapping("/error")
-    @ResponseBody
-    public String handleError(HttpServletRequest request) {
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        //Deactivated for security reasons. The end user should not see which exception are thrown if something goes wrong
-        //Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
-        String message = (String) request.getAttribute("javax.servlet.error.message");
-        return String.format("<html><body><h2>Error Page</h2><div>Status code: <b>%s</b></div>"
-                        + "<div>Message: <b>%s</b></div><body></html>",
-                statusCode, message.length() <= 0? "N/A": message);
-    }
-    */
-
 }

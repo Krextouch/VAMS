@@ -12,11 +12,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class EmployeeService {
@@ -97,7 +98,7 @@ public class EmployeeService {
         if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
             token = token.substring(7);
         } else {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "No token found");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No token found");
         }
 
         String email = jwtTokenProvider.getUserMailFromToken(token);
@@ -107,7 +108,7 @@ public class EmployeeService {
         if (employee.isPresent()) {
             return employee.get();
         } else {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Invalid token");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token");
         }
     }
 
@@ -224,7 +225,7 @@ public class EmployeeService {
             employee = employeeRepository.findByNameTag(name).orElseThrow(() -> new UsernameNotFoundException("Name tag not found"));
         }
 
-        if(!(employee == null)) {
+        if (!(employee == null)) {
             int leftLimit = 48; // numeral '0'
             int rightLimit = 122; // letter 'z'
             int targetStringLength = 32;
