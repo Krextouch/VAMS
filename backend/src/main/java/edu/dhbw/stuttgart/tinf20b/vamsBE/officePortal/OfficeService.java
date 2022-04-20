@@ -8,6 +8,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationParam;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.*;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -92,12 +93,12 @@ public class OfficeService {
         List<OpenReservationParam> openReservationParamList = new ArrayList<>();
 
         for (Reservation reservation : allVehicleWithoutVerification) {
-            OpenReservationParam openReservationParam = new OpenReservationParam();
-
-            openReservationParam.setReservationId(reservation.getId());
-            openReservationParam.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
-            openReservationParam.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
-            openReservationParam.setVehicleVin(reservation.getVehicle().getVin());
+            OpenReservationParam openReservationParam = OpenReservationParam.builder()
+                    .reservationId(reservation.getId())
+                    .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                    .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                    .vehicleVin(reservation.getVehicle().getVin())
+                    .build();
 
             openReservationParamList.add(openReservationParam);
         }
@@ -111,31 +112,32 @@ public class OfficeService {
         for (Employee employee : employeeRepository.findAll()) {
             List<ReservationParam> reservationList = new ArrayList<>();
             for (Reservation reservation : employee.getReservation()) {
-                ReservationParam reservationParam = new ReservationParam();
-
-                reservationParam.setId(reservation.getId());
-                reservationParam.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
-                reservationParam.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
-                reservationParam.setIsVerified(reservation.getIsVerified());
-                reservationParam.setVehicleVin(reservation.getVehicle().getVin());
-                reservationParam.setEmployeeId(reservation.getEmployee().getEmployeeId());
+                ReservationParam reservationParam = ReservationParam.builder()
+                        .id(reservation.getId())
+                        .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                        .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                        .isVerified(reservation.getIsVerified())
+                        .vehicleVin(reservation.getVehicle().getVin())
+                        .employeeId(reservation.getEmployee().getEmployeeId())
+                        .build();
 
                 reservationList.add(reservationParam);
             }
 
-            AllEmployeeParam addEmployee = new AllEmployeeParam();
-            addEmployee.setEmployeeId(employee.getEmployeeId());
-            addEmployee.setFirstName(employee.getFirstName());
-            addEmployee.setLastName(employee.getLastName());
-            addEmployee.setEmail(employee.getEmail());
-            addEmployee.setNameTag(employee.getNameTag());
-            addEmployee.setPassword(employee.getPassword());
-            addEmployee.setWorkCard(employee.getWorkCard());
-            addEmployee.setBirthday(employee.getBirthday());
-            addEmployee.setBirthplace(employee.getBirthplace());
-            addEmployee.setHasOfficeRights(employee.isHasOfficeRights());
-            addEmployee.setHasDrivingLicense(employee.isHasDrivingLicense());
-            addEmployee.setReservation(reservationList);
+            AllEmployeeParam addEmployee = AllEmployeeParam.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .email(employee.getEmail())
+                    .nameTag(employee.getNameTag())
+                    .password(employee.getPassword())
+                    .workCard(employee.getWorkCard())
+                    .birthday(employee.getBirthday())
+                    .birthplace(employee.getBirthplace())
+                    .hasOfficeRights(employee.isHasOfficeRights())
+                    .hasDrivingLicense(employee.isHasDrivingLicense())
+                    .reservation(reservationList)
+                    .build();
 
             employeeList.add(addEmployee);
         }

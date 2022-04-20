@@ -16,10 +16,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class EmployeeService {
@@ -80,11 +77,12 @@ public class EmployeeService {
             }
 
             if (vehicleAvailable) {
-                AvailableVehicleParam availableVehicleParam = new AvailableVehicleParam();
-                availableVehicleParam.setBrand(vehicle.getBrand());
-                availableVehicleParam.setColor(vehicle.getColor());
-                availableVehicleParam.setModel(vehicle.getModel());
-                availableVehicleParam.setPs(vehicle.getPs());
+                AvailableVehicleParam availableVehicleParam = AvailableVehicleParam.builder()
+                        .brand(vehicle.getBrand())
+                        .color(vehicle.getColor())
+                        .model(vehicle.getModel())
+                        .ps(vehicle.getPs())
+                        .build();
 
                 availableVehicleParamList.add(availableVehicleParam);
             }
@@ -117,13 +115,13 @@ public class EmployeeService {
         List<SingleEmployeeReservationParam> responseSerp = new ArrayList<>();
 
         for (Reservation reservation : reservationRepository.findAllByEmployee(getEmployeeFromToken(authorization)).get()) {
-            SingleEmployeeReservationParam serp = new SingleEmployeeReservationParam();
-
-            serp.setId(reservation.getId());
-            serp.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
-            serp.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
-            serp.setIsVerified(reservation.getIsVerified());
-            serp.setVehicleVin(reservation.getVehicle().getVin());
+            SingleEmployeeReservationParam serp = SingleEmployeeReservationParam.builder()
+                    .id(reservation.getId())
+                    .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                    .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                    .isVerified(reservation.getIsVerified())
+                    .vehicleVin(reservation.getVehicle().getVin())
+                    .build();
 
             responseSerp.add(serp);
         }
@@ -139,14 +137,14 @@ public class EmployeeService {
             if (!(reservationFilter.isShowAllEmployees() && employee.isHasOfficeRights())) {
                 if (!(employee.equals(reservation.getEmployee()))) continue;
             }
-            ReservationParam rP = new ReservationParam();
-
-            rP.setId(reservation.getId());
-            rP.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
-            rP.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
-            rP.setIsVerified(reservation.getIsVerified());
-            rP.setVehicleVin(reservation.getVehicle().getVin());
-            rP.setEmployeeId(reservation.getEmployee().getEmployeeId());
+            ReservationParam rP = ReservationParam.builder()
+                    .id(reservation.getId())
+                    .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                    .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                    .isVerified(reservation.getIsVerified())
+                    .vehicleVin(reservation.getVehicle().getVin())
+                    .employeeId(reservation.getEmployee().getEmployeeId())
+                    .build();
 
             reservationParamList.add(rP);
         }

@@ -1,6 +1,7 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationParam;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 public class AllEmployeeParam {
 
