@@ -1,8 +1,9 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
-import edu.dhbw.stuttgart.tinf20b.vamsBE.core.VehicleService;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +12,16 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class OfficePortalControllerImpl implements OfficePortalController {
 
-    private final VehicleService vehicleService;
     private final OfficeService officeService;
 
     @Autowired
-    public OfficePortalControllerImpl(VehicleService vehicleService, OfficeService officeService) {
-        this.vehicleService = vehicleService;
+    public OfficePortalControllerImpl(OfficeService officeService) {
         this.officeService = officeService;
     }
 
     @Override
     public String ping() {
         return "Hello Office";
-    }
-
-    //delete prod only for test
-    @Override
-    public void testCar() {
-        this.vehicleService.setVehicleTest();
     }
 
     @Override
@@ -44,6 +37,11 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     @Override
     public void updateEmployee(Employee employee) {
         this.officeService.createEmployee(employee);
+    }
+
+    @Override
+    public AllEmployeeResponse allEmployee(AllEmployeeFilter allEmployeeFilter) {
+        return this.officeService.allEmployee(allEmployeeFilter);
     }
 
     @Override

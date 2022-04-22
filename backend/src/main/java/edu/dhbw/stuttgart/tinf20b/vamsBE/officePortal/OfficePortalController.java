@@ -2,6 +2,8 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,6 @@ public interface OfficePortalController {
     @GetMapping("/ping")
     String ping();
 
-    @GetMapping("/testCar")
-    void testCar();
-
     @PostMapping("/createEmployee")
     void createEmployee(@RequestBody Employee employee);
 
@@ -24,6 +23,9 @@ public interface OfficePortalController {
 
     @PostMapping("/updateEmployee")
     void updateEmployee(@RequestBody Employee employee);
+
+    @PostMapping("/allEmployee")
+    AllEmployeeResponse allEmployee(@RequestBody AllEmployeeFilter allEmployeeFilter);
 
     @PostMapping("/createVehicle")
     void createVehicle(@RequestBody Vehicle vehicle);

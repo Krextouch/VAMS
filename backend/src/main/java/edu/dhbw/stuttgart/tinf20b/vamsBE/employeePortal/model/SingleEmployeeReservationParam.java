@@ -1,4 +1,4 @@
-package edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model;
+package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpenReservationParam {
+public class SingleEmployeeReservationParam {
 
-    private int reservationId;
+    private int id;
     private LocalDateTime startTimeOfReservation;
     private LocalDateTime endTimeOfReservation;
+    private Boolean isVerified;
     private String vehicleVin;
 }

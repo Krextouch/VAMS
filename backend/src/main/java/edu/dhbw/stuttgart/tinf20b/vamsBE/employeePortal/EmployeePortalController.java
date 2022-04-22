@@ -1,8 +1,7 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.AvailableVehicleResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationTimeframe;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,17 +9,26 @@ import org.springframework.web.bind.annotation.*;
 public interface EmployeePortalController {
 
     @GetMapping("/ping")
-    String ping();
+    String ping(@RequestHeader("Authorization") String authorization);
 
     @PostMapping("/createReservation")
-    void createReservation(@RequestBody Reservation reservation);
+    void createReservation(@RequestBody Reservation reservation, @RequestHeader("Authorization") String authorization);
 
     @PostMapping("/updateReservation")
-    void updateReservation(@RequestBody Reservation reservation);
+    void updateReservation(@RequestBody Reservation reservation, @RequestHeader("Authorization") String authorization);
 
     @PostMapping("/deleteReservation")
-    void deleteReservation(@RequestBody Reservation reservation);
+    void deleteReservation(@RequestBody Reservation reservation, @RequestHeader("Authorization") String authorization);
 
     @PostMapping("/getAvailableVehicle")
     AvailableVehicleResponse getAvailableVehicle(@RequestBody ReservationTimeframe reservationTimeframe);
+
+    @PostMapping("/getReservatedVehicle")
+    SingleEmployeeReservationResponse getReservatedVehicle(@RequestHeader("Authorization") String authorization);
+
+    @PostMapping("/allReservations")
+    ReservationResponse allReservations(@RequestBody ReservationFilter reservationFilter, @RequestHeader("Authorization") String authorization);
+
+    @PostMapping("/passwordReset")
+    String passwordReset(@RequestBody PasswordResetParam passwordResetParam);
 }

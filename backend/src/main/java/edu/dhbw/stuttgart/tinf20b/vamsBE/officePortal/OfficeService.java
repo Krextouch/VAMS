@@ -4,12 +4,10 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Vehicle;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.VehicleRepository;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.EmployeeService;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationParam;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationParam;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class OfficeService {
     private final ReservationRepository reservationRepository;
 
     @Autowired
-    public OfficeService(EmployeeRepository employeeRepository, VehicleRepository vehicleRepository, ReservationRepository reservationRepository, EmployeeService employeeService) {
+    public OfficeService(EmployeeRepository employeeRepository, VehicleRepository vehicleRepository, ReservationRepository reservationRepository) {
         this.employeeRepository = employeeRepository;
         this.vehicleRepository = vehicleRepository;
         this.reservationRepository = reservationRepository;
@@ -94,16 +92,124 @@ public class OfficeService {
         List<OpenReservationParam> openReservationParamList = new ArrayList<>();
 
         for (Reservation reservation : allVehicleWithoutVerification) {
-            OpenReservationParam openReservationParam = new OpenReservationParam();
-
-            openReservationParam.setReservationId(reservation.getId());
-            openReservationParam.setStartTimeOfReservation(reservation.getStartTimeOfReservation());
-            openReservationParam.setEndTimeOfReservation(reservation.getEndTimeOfReservation());
-            openReservationParam.setVehicleVin(reservation.getVehicle().getVin());
+            OpenReservationParam openReservationParam = OpenReservationParam.builder()
+                    .reservationId(reservation.getId())
+                    .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                    .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                    .vehicleVin(reservation.getVehicle().getVin())
+                    .build();
 
             openReservationParamList.add(openReservationParam);
         }
 
         return new OpenReservationResponse(openReservationParamList);
+    }
+
+    public AllEmployeeResponse allEmployee(AllEmployeeFilter allEmployeeFilter) {
+        List<AllEmployeeParam> employeeList = new ArrayList<>();
+
+        for (Employee employee : employeeRepository.findAll()) {
+            List<ReservationParam> reservationList = new ArrayList<>();
+            for (Reservation reservation : employee.getReservation()) {
+                ReservationParam reservationParam = ReservationParam.builder()
+                        .id(reservation.getId())
+                        .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                        .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                        .isVerified(reservation.getIsVerified())
+                        .vehicleVin(reservation.getVehicle().getVin())
+                        .employeeId(reservation.getEmployee().getEmployeeId())
+                        .build();
+
+                reservationList.add(reservationParam);
+            }
+
+            AllEmployeeParam addEmployee = AllEmployeeParam.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .email(employee.getEmail())
+                    .nameTag(employee.getNameTag())
+                    .password(employee.getPassword())
+                    .workCard(employee.getWorkCard())
+                    .birthday(employee.getBirthday())
+                    .birthplace(employee.getBirthplace())
+                    .hasOfficeRights(employee.isHasOfficeRights())
+                    .hasDrivingLicense(employee.isHasDrivingLicense())
+                    .reservation(reservationList)
+                    .build();
+
+            employeeList.add(addEmployee);
+        }
+
+        return new AllEmployeeResponse(applyFilters(employeeList, allEmployeeFilter));
+    }
+
+    private List<AllEmployeeParam> applyFilters(List<AllEmployeeParam> allEmployeeParamList, AllEmployeeFilter allEmployeeFilter) {
+
+        //firstName
+        if (allEmployeeFilter.getFirstName() != null) {
+            if(!(allEmployeeFilter.getFirstName().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getFirstName().toLowerCase().contains(allEmployeeFilter.getFirstName().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        //lastName
+        if (allEmployeeFilter.getLastName() != null) {
+            if(!(allEmployeeFilter.getLastName().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getLastName().toLowerCase().contains(allEmployeeFilter.getLastName().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        //email
+        if (allEmployeeFilter.getEmail() != null) {
+            if(!(allEmployeeFilter.getEmail().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getEmail().toLowerCase().contains(allEmployeeFilter.getEmail().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        //nameTag
+        if (allEmployeeFilter.getNameTag() != null) {
+            if(!(allEmployeeFilter.getNameTag().isBlank())) {
+                List<AllEmployeeParam> tmpAllEmployeeParamList = new ArrayList<>();
+
+                for (AllEmployeeParam allEmployeeParam : allEmployeeParamList) {
+                    if (allEmployeeParam.getNameTag().toLowerCase().contains(allEmployeeFilter.getNameTag().toLowerCase())) {
+                        tmpAllEmployeeParamList.add(allEmployeeParam);
+                    }
+                }
+
+                allEmployeeParamList.clear();
+                allEmployeeParamList.addAll(tmpAllEmployeeParamList);
+            }
+        }
+
+        return allEmployeeParamList;
     }
 }
