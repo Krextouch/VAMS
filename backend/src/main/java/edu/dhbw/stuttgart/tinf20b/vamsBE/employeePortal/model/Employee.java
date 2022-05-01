@@ -1,6 +1,7 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.raspi.model.RaspiLog;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,4 +42,6 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservation = new LinkedList<>();
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RaspiLog> raspiLogs = new LinkedList<>();
 }
