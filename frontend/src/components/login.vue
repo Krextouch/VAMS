@@ -1,9 +1,7 @@
 <template>
   <div class="LoginMaskWrapper">
     <h1>LOGIN</h1>
-    <p>Username or Email</p>
     <input type="text" name="username" v-model="input.username" placeholder="Username" />
-    <p>Password</p>
     <input type="password" name="password" v-model="input.password" placeholder="Password" />
     <button type="button" v-on:click="login()">Login</button>
   </div>
@@ -24,6 +22,7 @@ export default {
   },
   methods: {
     login() {
+      console.log("Login clicked")
     }
   }
 }
@@ -33,7 +32,11 @@ export default {
   .LoginMaskWrapper {
     background: dimgray;
     width: 50vw;
-    height: 50vw;
+    max-width: 750px;
+    min-width: 300px;
+    height: 35vw;
+    max-height: 500px;
+    min-height: 400px;
     margin: 0px 25%;
     padding: 15px;
     border: 2px solid gray;
@@ -55,7 +58,7 @@ export default {
   input {
     width: 66%;
     margin: 0px 10% 10% 10%;
-    padding: 15px;
+    padding: 10px;
     font-size: medium;
     border-radius: inherit;
   }
@@ -80,5 +83,9 @@ export default {
     background-color: #5a86d5;
     box-shadow: 0 4px #555555;
     transform: translateY(5px);
+  }
+  
+  @media screen {
+    
   }
 </style>
