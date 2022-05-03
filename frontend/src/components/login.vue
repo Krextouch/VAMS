@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'LoginPage',
+  name: 'LoginMask',
   props: {
   },
   data() {
@@ -37,7 +37,7 @@ export default {
     height: 35vw;
     max-height: 500px;
     min-height: 400px;
-    margin: 0px 25%;
+    margin: 0 25%;
     padding: 15px;
     border: 2px solid gray;
     border-radius: 15px;
@@ -51,13 +51,13 @@ export default {
   }
   p {
     width: 66%;
-    margin: 0px 10%;
+    margin: 0 10%;
     font-size: large;
     color: white;
   }
   input {
     width: 66%;
-    margin: 0px 10% 10% 10%;
+    margin: 0 10% 10% 10%;
     padding: 10px;
     font-size: medium;
     border-radius: inherit;

@@ -1,14 +1,18 @@
 <template>
-  <LoginPage/>
+  <menu-bar/>
+  <LoginMask/>
+  <div style="height: 1000px; width: 50px; background-color:lightgoldenrodyellow;"></div>
 </template>
 
 <script>
-import LoginPage from './components/login.vue'
+import LoginMask from './components/login.vue'
+import menuBar from './components/menuBar.vue'
 
 export default {
   name: 'App',
   components: {
-    LoginPage
+    LoginMask,
+    menuBar
   }
 }
 </script>
