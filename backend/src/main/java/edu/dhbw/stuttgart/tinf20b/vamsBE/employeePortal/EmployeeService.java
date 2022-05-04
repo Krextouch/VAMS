@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,27 +52,31 @@ public class EmployeeService {
         this.reservationRepository.save(newReservation);
     }
 
-    public void deleteReservation(Reservation reservation, String authorization) {
+    public void deleteReservation(int reservationId, String authorization) {
         Employee employee = getEmployeeFromToken(authorization);
-        if (!(employee.getEmployeeId() == reservation.getEmployee().getEmployeeId())) {
+        Optional<Reservation> reservation = this.reservationRepository.findById(reservationId);
+        if (reservation.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        if (!(employee.getEmployeeId() == reservation.get().getEmployee().getEmployeeId())) {
             return;
         } else if (!employee.isHasOfficeRights()) {
             return;
         }
-        this.reservationRepository.deleteById(reservation.getId());
+        this.reservationRepository.deleteById(reservation.get().getId());
     }
 
-    public AvailableVehicleResponse getAvailableVehicle(ReservationTimeframe reservationTimeframe) {
+    public AvailableVehicleResponse getAvailableVehicle(LocalDateTime startTime, LocalDateTime endTime) {
         List<AvailableVehicleParam> availableVehicleParamList = new ArrayList<>();
         boolean vehicleAvailable;
 
         for (Vehicle vehicle : vehicleRepository.findAll()) {
             vehicleAvailable = true;
             for (Reservation reservation : vehicle.getReservation()) {
-                if ((reservation.getEndTimeOfReservation().isAfter(reservationTimeframe.getStartTimeOfReservation())
-                        && reservation.getStartTimeOfReservation().isBefore(reservationTimeframe.getStartTimeOfReservation()))
-                        || (reservation.getEndTimeOfReservation().isAfter(reservationTimeframe.getEndTimeOfReservation())
-                        && reservation.getStartTimeOfReservation().isBefore(reservationTimeframe.getEndTimeOfReservation()))) {
+                if ((reservation.getEndTimeOfReservation().isAfter(startTime)
+                        && reservation.getStartTimeOfReservation().isBefore(startTime))
+                        || (reservation.getEndTimeOfReservation().isAfter(endTime)
+                        && reservation.getStartTimeOfReservation().isBefore(endTime))) {
                     vehicleAvailable = false;
                     break;
                 }

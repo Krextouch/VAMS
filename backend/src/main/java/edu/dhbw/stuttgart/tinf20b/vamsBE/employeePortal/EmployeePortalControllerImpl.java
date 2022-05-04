@@ -5,8 +5,12 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.Locale;
 
 @Controller
@@ -20,34 +24,27 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     }
 
     @Override
-    public String ping(@RequestHeader("Authorization") String authorization) {
-        return "Hello " +
-                this.employeeService.getEmployeeFromToken(authorization).getFirstName() + " " +
-                this.employeeService.getEmployeeFromToken(authorization).getLastName();
-    }
-
-    @Override
     public void createReservation(Reservation reservation, String authorization) {
         this.employeeService.createReservation(reservation, authorization);
     }
 
     @Override
-    public void updateReservation(Reservation reservation, String authorization) {
-        this.employeeService.createReservation(reservation, authorization);
+    public void updateReservation(@RequestBody Reservation reservation, String authorization) {
+        this.employeeService.createReservation(reservation, authorization); // <<-- Und wo wird das deleted?
     }
 
     @Override
-    public void deleteReservation(Reservation reservation, String authorization) {
-        this.employeeService.deleteReservation(reservation, authorization);
+    public void deleteReservation(@PathVariable("reservationId") int reservationId, String authorization) {
+        this.employeeService.deleteReservation(reservationId, authorization);
     }
 
     @Override
-    public AvailableVehicleResponse getAvailableVehicle(ReservationTimeframe reservationTimeframe) {
-        return this.employeeService.getAvailableVehicle(reservationTimeframe);
+    public AvailableVehicleResponse getAvailableVehicle(@RequestParam("start") LocalDateTime startTime, @RequestParam("end") LocalDateTime endTime) {
+        return this.employeeService.getAvailableVehicle(startTime, endTime);
     }
 
     @Override
-    public SingleEmployeeReservationResponse getReservatedVehicle(String authorization) {
+    public SingleEmployeeReservationResponse getReservedVehicle(String authorization) {
         return this.employeeService.getReservatedVehicle(authorization);
     }
 

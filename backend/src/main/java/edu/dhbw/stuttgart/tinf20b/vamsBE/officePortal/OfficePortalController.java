@@ -12,33 +12,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/office/api/v1")
 public interface OfficePortalController {
 
-    @GetMapping("/ping")
-    String ping();
-
     @PostMapping("/createEmployee")
     void createEmployee(@RequestBody Employee employee);
 
-    @PostMapping("/deleteEmployee")
-    void deleteEmployee(@RequestBody Employee employee);
+    @DeleteMapping("/deleteEmployee/{employeeId}")
+    void deleteEmployee(@PathVariable("employeeId") int employeeId);
 
-    @PostMapping("/updateEmployee")
+    @PutMapping("/updateEmployee")
     void updateEmployee(@RequestBody Employee employee);
 
-    @PostMapping("/allEmployee")
+    @GetMapping("/allEmployee")
     AllEmployeeResponse allEmployee(@RequestBody AllEmployeeFilter allEmployeeFilter);
 
     @PostMapping("/createVehicle")
     void createVehicle(@RequestBody Vehicle vehicle);
 
-    @PostMapping("/deleteVehicle")
-    void deleteVehicle(@RequestBody Vehicle vehicle);
+    @DeleteMapping("/deleteVehicle/{vin}")
+    void deleteVehicle(@PathVariable("vin") String vin);
 
-    @PostMapping("/updateVehicle")
+    @PutMapping("/updateVehicle")
     void updateVehicle(@RequestBody Vehicle vehicle);
 
-    @PostMapping("/verifyReservation")
+    @PutMapping("/verifyReservation")
     void verifyReservation(@RequestBody VerifyReservationRequest verifyReservationRequest);
 
-    @PostMapping("/openReservationRequest")
+    @GetMapping("/openReservationRequest")
     OpenReservationResponse openReservationRequest();
 }

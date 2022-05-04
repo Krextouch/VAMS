@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/raspi/api/v1")
 public interface RaspiController {
 
-    @GetMapping("/ping")
-    String ping();
-
     @PostMapping("/summon")
     SummonResponse summon(@RequestBody SummonRequest summonRequest);
 }

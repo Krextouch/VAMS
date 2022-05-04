@@ -42,7 +42,7 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 //Public uris
-                .antMatchers("/error", "/unauthorized", "/auth/api/v1/login", "/raspi/**").permitAll()
+                .antMatchers("/error", "/unauthorized", "/auth/api/v1/login", "/raspi/**", "/").permitAll()
                 //Employee uris
                 .antMatchers("/employee/**").hasRole("EMPLOYEE")
                 //Office uris

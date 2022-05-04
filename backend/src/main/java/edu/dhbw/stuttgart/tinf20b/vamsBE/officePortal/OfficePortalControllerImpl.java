@@ -8,6 +8,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationRespo
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class OfficePortalControllerImpl implements OfficePortalController {
@@ -20,18 +21,13 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public String ping() {
-        return "Hello Office";
-    }
-
-    @Override
     public void createEmployee(Employee employee) {
         this.officeService.createEmployee(employee);
     }
 
     @Override
-    public void deleteEmployee(Employee employee) {
-        this.officeService.deleteEmployee(employee);
+    public void deleteEmployee(@PathVariable("employeeId") int employeeId) {
+        this.officeService.deleteEmployee(employeeId);
     }
 
     @Override
@@ -50,8 +46,8 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public void deleteVehicle(Vehicle vehicle) {
-        this.officeService.deleteVehicle(vehicle);
+    public void deleteVehicle(@PathVariable("vin") String vin) {
+        this.officeService.deleteVehicle(vin);
     }
 
     @Override

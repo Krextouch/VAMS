@@ -9,11 +9,15 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.EmployeeRepository
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.ReservationParam;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OfficeService {
@@ -46,8 +50,12 @@ public class OfficeService {
         this.employeeRepository.save(newEmployee);
     }
 
-    public void deleteEmployee(Employee employee) {
-        this.employeeRepository.deleteById(employee.getEmployeeId());
+    public void deleteEmployee(int employeeId) {
+        Optional<Employee> employee = this.employeeRepository.findByEmployeeId(employeeId);
+        if (employee.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        this.employeeRepository.delete(employee.get());
     }
 
     public void createVehicle(Vehicle vehicle) {
@@ -64,8 +72,12 @@ public class OfficeService {
         this.vehicleRepository.save(newVehicle);
     }
 
-    public void deleteVehicle(Vehicle vehicle) {
-        this.vehicleRepository.deleteById(vehicle.getVin());
+    public void deleteVehicle(String vin) {
+        Optional<Vehicle> vehicle = this.vehicleRepository.findByVin(vin);
+        if (vehicle.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        this.vehicleRepository.delete(vehicle.get());
     }
 
     public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
