@@ -5,10 +5,10 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.VerifyReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class OfficePortalControllerImpl implements OfficePortalController {
@@ -21,7 +21,7 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public void createEmployee(Employee employee) {
+    public void createEmployee(@RequestBody Employee employee) {
         this.officeService.createEmployee(employee);
     }
 
@@ -31,17 +31,18 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public void updateEmployee(Employee employee) {
-        this.officeService.createEmployee(employee);
+    public void updateEmployee(@PathVariable("employeeId") int employeeId, Employee employee) {
+        employee.setEmployeeId(employeeId);
+        this.officeService.updateEmployee(employee);
     }
 
     @Override
-    public AllEmployeeResponse allEmployee(AllEmployeeFilter allEmployeeFilter) {
+    public AllEmployeeResponse allEmployee(@RequestBody AllEmployeeFilter allEmployeeFilter) {
         return this.officeService.allEmployee(allEmployeeFilter);
     }
 
     @Override
-    public void createVehicle(Vehicle vehicle) {
+    public void createVehicle(@RequestBody Vehicle vehicle) {
         this.officeService.createVehicle(vehicle);
     }
 
@@ -51,13 +52,14 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public void updateVehicle(Vehicle vehicle) {
-        this.officeService.createVehicle(vehicle);
+    public void updateVehicle(@PathVariable("vin") String vin, @RequestBody Vehicle vehicle) {
+        vehicle.setVin(vin);
+        this.officeService.updateVehicle(vehicle);
     }
 
     @Override
-    public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
-        this.officeService.verifyReservation(verifyReservationRequest);
+    public void verifyReservation(@PathVariable("reservationId") int reservationId, @RequestBody String verifyIt) {
+        this.officeService.verifyReservation(reservationId, Boolean.parseBoolean(verifyIt));
     }
 
     @Override

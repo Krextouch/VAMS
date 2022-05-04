@@ -34,63 +34,110 @@ public class OfficeService {
     }
 
     public void createEmployee(Employee employee) {
-        Employee newEmployee = Employee.builder()
-                .employeeId(employee.getEmployeeId())
-                .firstName(employee.getFirstName())
-                .lastName(employee.getLastName())
-                .email(employee.getEmail())
-                .nameTag(employee.getNameTag())
-                .password(BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt()))
-                .workCard(employee.getWorkCard())
-                .birthday(employee.getBirthday())
-                .birthplace(employee.getBirthplace())
-                .hasDrivingLicense(employee.isHasDrivingLicense())
-                .hasOfficeRights(employee.isHasOfficeRights())
-                .build();
-        this.employeeRepository.save(newEmployee);
+        if(employeeRepository.existsById(employee.getEmployeeId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee does exist");
+        } else {
+            Employee newEmployee = Employee.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .email(employee.getEmail())
+                    .nameTag(employee.getNameTag())
+                    .password(BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt()))
+                    .workCard(employee.getWorkCard())
+                    .birthday(employee.getBirthday())
+                    .birthplace(employee.getBirthplace())
+                    .hasDrivingLicense(employee.isHasDrivingLicense())
+                    .hasOfficeRights(employee.isHasOfficeRights())
+                    .build();
+            this.employeeRepository.save(newEmployee);
+        }
+    }
+
+    public void updateEmployee(Employee employee) {
+        if(!(employeeRepository.existsById(employee.getEmployeeId()))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee does not exist");
+        } else {
+            Employee newEmployee = Employee.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .email(employee.getEmail())
+                    .nameTag(employee.getNameTag())
+                    .password(BCrypt.hashpw(employee.getPassword(), BCrypt.gensalt()))
+                    .workCard(employee.getWorkCard())
+                    .birthday(employee.getBirthday())
+                    .birthplace(employee.getBirthplace())
+                    .hasDrivingLicense(employee.isHasDrivingLicense())
+                    .hasOfficeRights(employee.isHasOfficeRights())
+                    .build();
+            this.employeeRepository.save(newEmployee);
+        }
     }
 
     public void deleteEmployee(int employeeId) {
         Optional<Employee> employee = this.employeeRepository.findByEmployeeId(employeeId);
         if (employee.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee does not exist");
         }
         this.employeeRepository.delete(employee.get());
     }
 
     public void createVehicle(Vehicle vehicle) {
-        Vehicle newVehicle = Vehicle.builder()
-                .vin(vehicle.getVin())
-                .licensePlate(vehicle.getLicensePlate())
-                .brand(vehicle.getBrand())
-                .model(vehicle.getModel())
-                .ps(vehicle.getPs())
-                .color(vehicle.getColor())
-                .firstRegistration(vehicle.getFirstRegistration())
-                .build();
+        if(vehicleRepository.existsById(vehicle.getVin())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does exist");
+        } else {
+            Vehicle newVehicle = Vehicle.builder()
+                    .vin(vehicle.getVin())
+                    .licensePlate(vehicle.getLicensePlate())
+                    .brand(vehicle.getBrand())
+                    .model(vehicle.getModel())
+                    .ps(vehicle.getPs())
+                    .color(vehicle.getColor())
+                    .firstRegistration(vehicle.getFirstRegistration())
+                    .build();
 
-        this.vehicleRepository.save(newVehicle);
+            this.vehicleRepository.save(newVehicle);
+        }
+    }
+
+    public void updateVehicle(Vehicle vehicle) {
+        if(!(vehicleRepository.existsById(vehicle.getVin()))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist");
+        } else {
+            Vehicle newVehicle = Vehicle.builder()
+                    .vin(vehicle.getVin())
+                    .licensePlate(vehicle.getLicensePlate())
+                    .brand(vehicle.getBrand())
+                    .model(vehicle.getModel())
+                    .ps(vehicle.getPs())
+                    .color(vehicle.getColor())
+                    .firstRegistration(vehicle.getFirstRegistration())
+                    .build();
+
+            this.vehicleRepository.save(newVehicle);
+        }
     }
 
     public void deleteVehicle(String vin) {
         Optional<Vehicle> vehicle = this.vehicleRepository.findByVin(vin);
         if (vehicle.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle does not exist");
         }
         this.vehicleRepository.delete(vehicle.get());
     }
 
-    public void verifyReservation(VerifyReservationRequest verifyReservationRequest) {
-        if (!verifyReservationRequest.isVerifyIt()) {
-            this.reservationRepository.deleteById(verifyReservationRequest.getReservationId());
+    public void verifyReservation(int reservationId, boolean verifyIt) {
+        if (!reservationRepository.existsById(reservationId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation does not exist");
         } else {
             Reservation reservation = Reservation.builder()
-                    .id(verifyReservationRequest.getReservationId())
-                    .startTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getStartTimeOfReservation())
-                    .endTimeOfReservation(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEndTimeOfReservation())
-                    .vehicle(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getVehicle())
-                    .employee(reservationRepository.findById(verifyReservationRequest.getReservationId()).get().getEmployee())
-                    .isVerified(verifyReservationRequest.isVerifyIt())
+                    .id(reservationId)
+                    .startTimeOfReservation(reservationRepository.findById(reservationId).get().getStartTimeOfReservation())
+                    .endTimeOfReservation(reservationRepository.findById(reservationId).get().getEndTimeOfReservation())
+                    .vehicle(reservationRepository.findById(reservationId).get().getVehicle())
+                    .employee(reservationRepository.findById(reservationId).get().getEmployee())
+                    .isVerified(verifyIt)
                     .build();
 
             this.reservationRepository.save(reservation);
