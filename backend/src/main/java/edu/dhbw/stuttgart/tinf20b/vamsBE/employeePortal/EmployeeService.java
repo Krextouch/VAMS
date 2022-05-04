@@ -40,16 +40,39 @@ public class EmployeeService {
     }
 
     public void createReservation(Reservation reservation, String authorization) {
-        Employee employee = getEmployeeFromToken(authorization);
-        Reservation newReservation = Reservation.builder()
-                .startTimeOfReservation(reservation.getStartTimeOfReservation())
-                .endTimeOfReservation(reservation.getEndTimeOfReservation())
-                .vehicle(reservation.getVehicle())
-                .employee(employee)
-                .isVerified(employee.isHasOfficeRights())
-                .build();
+        if(!(reservationRepository.existsById(reservation.getId()))) {
+            Employee employee = getEmployeeFromToken(authorization);
+            Reservation newReservation = Reservation.builder()
+                    .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                    .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                    .vehicle(reservation.getVehicle())
+                    .employee(employee)
+                    .isVerified(employee.isHasOfficeRights())
+                    .build();
 
-        this.reservationRepository.save(newReservation);
+            this.reservationRepository.save(newReservation);
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation already exists");
+        }
+    }
+
+    public void updateReservation(Reservation reservation, String authorization) {
+        if(reservationRepository.existsById(reservation.getId())) {
+            Employee employee = getEmployeeFromToken(authorization);
+            Reservation newReservation = Reservation.builder()
+                    .id(reservation.getId())
+                    .startTimeOfReservation(reservation.getStartTimeOfReservation())
+                    .endTimeOfReservation(reservation.getEndTimeOfReservation())
+                    .vehicle(reservation.getVehicle())
+                    .employee(employee)
+                    .isVerified(employee.isHasOfficeRights())
+                    .build();
+
+            this.reservationRepository.save(newReservation);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation does not exist");
+        }
+
     }
 
     public void deleteReservation(int reservationId, String authorization) {
@@ -59,9 +82,9 @@ public class EmployeeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!(employee.getEmployeeId() == reservation.get().getEmployee().getEmployeeId())) {
-            return;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Employee does not match to reservation");
         } else if (!employee.isHasOfficeRights()) {
-            return;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No office rights");
         }
         this.reservationRepository.deleteById(reservation.get().getId());
     }

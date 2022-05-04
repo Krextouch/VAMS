@@ -18,11 +18,6 @@ public class RaspiControllerImpl implements RaspiController {
     }
 
     @Override
-    public String ping() {
-        return "Hello World";
-    }
-
-    @Override
     public SummonResponse summon(@RequestBody SummonRequest summonRequest) {
         return this.raspiService.summon(summonRequest);
     }

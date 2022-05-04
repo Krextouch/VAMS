@@ -13,8 +13,8 @@ public interface EmployeePortalController {
     @PostMapping("/createReservation")
     void createReservation(@RequestBody Reservation reservation, @RequestHeader("Authorization") String authorization);
 
-    @PutMapping("/updateReservation")
-    void updateReservation(@RequestBody Reservation reservation, @RequestHeader("Authorization") String authorization);
+    @PutMapping("/updateReservation/{reservationId}")
+    void updateReservation(@PathVariable("reservationId") int reservationId, @RequestBody Reservation reservation, @RequestHeader("Authorization") String authorization);
 
     @DeleteMapping("/deleteReservation/{reservationId}")
     void deleteReservation(@PathVariable("reservationId") int reservationId, @RequestHeader("Authorization") String authorization);

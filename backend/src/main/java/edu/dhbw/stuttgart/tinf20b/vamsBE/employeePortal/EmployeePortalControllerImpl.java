@@ -29,8 +29,9 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     }
 
     @Override
-    public void updateReservation(@RequestBody Reservation reservation, String authorization) {
-        this.employeeService.createReservation(reservation, authorization); // <<-- Und wo wird das deleted?
+    public void updateReservation(@PathVariable("reservationId") int reservationId, @RequestBody Reservation reservation, String authorization) {
+        reservation.setId(reservationId);
+        this.employeeService.updateReservation(reservation, authorization);
     }
 
     @Override
