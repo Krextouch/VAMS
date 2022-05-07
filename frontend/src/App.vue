@@ -1,17 +1,15 @@
 <template>
   <menu-bar/>
-  <LoginMask/>
+  <router-view/>
   <div style="height: 1000px; width: 50px; background-color:lightgoldenrodyellow;"></div>
 </template>
 
 <script>
-import LoginMask from './components/login.vue'
 import menuBar from './components/menuBar.vue'
 
 export default {
   name: 'App',
   components: {
-    LoginMask,
     menuBar
   }
 }

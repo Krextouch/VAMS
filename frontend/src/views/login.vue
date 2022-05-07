@@ -1,9 +1,11 @@
 <template>
   <div class="LoginMaskWrapper">
     <h1>LOGIN</h1>
-    <input type="text" name="username" v-model="input.username" placeholder="Username" />
-    <input type="password" name="password" v-model="input.password" placeholder="Password" />
-    <button type="button" v-on:click="login()">Login</button>
+    <form action="">
+      <input type="text" id="username" name="username" v-model="username" required placeholder="Username" />
+      <input type="password" id="password" name="password" v-model="password" required placeholder="Password" />
+      <button type="submit" v-on:click="handleSubmit()">Login</button>
+    </form>
   </div>
 </template>
 
@@ -14,15 +16,21 @@ export default {
   },
   data() {
     return {
-      input: {
-        username: "",
-        password: ""
-      }
+      username: "",
+      password: ""
     }
   },
   methods: {
-    login() {
-      console.log("Login clicked")
+    handleSubmit() {
+      if (this.username != "" && this.password != "") {
+        const data = {
+          username: this.username,
+          password: this.password
+        }
+        console.log(data)
+      } else {
+        console.log("Empty input")
+      }
     }
   }
 }
@@ -57,10 +65,11 @@ export default {
   }
   input {
     width: 66%;
+    height: 30px;
     margin: 0 10% 10% 10%;
     padding: 10px;
     font-size: medium;
-    border-radius: inherit;
+    border-radius: 15px;
   }
   button {
     display: inline-block;
@@ -75,7 +84,7 @@ export default {
     border: none;
     border-radius: 15px;
   }
-  button:hover {
+  button:hover, button:focus {
     background-color: cornflowerblue;
     box-shadow: 0 6px #999;
   }

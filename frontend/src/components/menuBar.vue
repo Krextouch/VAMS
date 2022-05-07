@@ -64,4 +64,11 @@ li a {
 li a:hover {
   background-color: rgb(26, 26, 26);
 }
+
+@media (max-width:1000px) {
+  nav {
+    width: 100vw;
+    margin: 0 15px 0 0;
+  }
+}
 </style>
