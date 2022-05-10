@@ -1,36 +1,38 @@
 <template>
   <div class="LoginMaskWrapper">
-    <h1>LOGIN</h1>
-    <form action="">
-      <input type="text" id="username" name="username" v-model="username" required placeholder="Username" />
-      <input type="password" id="password" name="password" v-model="password" required placeholder="Password" />
-      <button type="submit" v-on:click="handleSubmit()">Login</button>
+    <h1>VAMS</h1>
+    <form @submit.prevent="handleSubmit">
+      <input type="text" id="username" name="username" autocomplete="username" v-model="username" required placeholder="Username" />
+      <input type="password" id="password" name="password" autocomplete="current-password" v-model="password" required placeholder="Password" />
+      <button type="submit">Login</button>
     </form>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'LoginMask',
   props: {
   },
   data() {
     return {
-      username: "",
-      password: ""
+      username: '',
+      password: ''
     }
   },
   methods: {
-    handleSubmit() {
-      if (this.username != "" && this.password != "") {
-        const data = {
+    async handleSubmit() {
+        const response = await axios.post('auth/api/v1/login', {
           username: this.username,
           password: this.password
-        }
-        console.log(data)
-      } else {
-        console.log("Empty input")
-      }
+        });
+
+        console.log(response);
+
+        localStorage.setItem('token', response.data.token)
+        this.$router.push('/home')
     }
   }
 }
@@ -39,14 +41,16 @@ export default {
 <style scoped>
   .LoginMaskWrapper {
     background: dimgray;
+    position: absolute;
+    margin: auto;
+    padding: 0;
+    top: -10vh; left: 0; bottom: 0; right: 0;
     width: 50vw;
     max-width: 750px;
     min-width: 300px;
     height: 35vw;
     max-height: 500px;
     min-height: 400px;
-    margin: 0 25%;
-    padding: 15px;
     border: 2px solid gray;
     border-radius: 15px;
     box-shadow: inset 0 0 1em black;
@@ -56,6 +60,7 @@ export default {
     margin: 20px 25%;
     padding-bottom: 19px;
     border-bottom: 1px solid black;
+    letter-spacing: 2px;
   }
   p {
     width: 66%;
@@ -69,7 +74,7 @@ export default {
     margin: 0 10% 10% 10%;
     padding: 10px;
     font-size: medium;
-    border-radius: 15px;
+    border-radius: 30px;
   }
   button {
     display: inline-block;
@@ -83,10 +88,11 @@ export default {
     background-color: rgba(105, 105, 105, 0.99);
     border: none;
     border-radius: 15px;
+    background-color: cornflowerblue;
   }
   button:hover, button:focus {
-    background-color: cornflowerblue;
     box-shadow: 0 6px #999;
+    transform: translateY(-5px);
   }
   button:active {
     background-color: #5a86d5;
@@ -94,7 +100,10 @@ export default {
     transform: translateY(5px);
   }
   
-  @media screen {
-    
+  @media (max-width: 600px) {
+    input {
+      width: 90%;
+      margin: 0 0 10% 0;
+    }
   }
 </style>
