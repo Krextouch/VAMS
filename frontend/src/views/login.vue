@@ -28,11 +28,9 @@ export default {
           username: this.username,
           password: this.password
         });
-
-        console.log(response);
-
         localStorage.setItem('token', response.data.token)
-        this.$router.push('/home')
+        localStorage.setItem('expires', response.data.expiration)
+        this.$router.push({ name: 'Home'})
     }
   }
 }
@@ -55,6 +53,7 @@ export default {
     border-radius: 15px;
     box-shadow: inset 0 0 1em black;
   }
+
   h1 {
     width: 50%;
     margin: 20px 25%;
@@ -62,12 +61,14 @@ export default {
     border-bottom: 1px solid black;
     letter-spacing: 2px;
   }
+
   p {
     width: 66%;
     margin: 0 10%;
     font-size: large;
     color: white;
   }
+
   input {
     width: 66%;
     height: 30px;
@@ -76,6 +77,7 @@ export default {
     font-size: medium;
     border-radius: 30px;
   }
+
   button {
     display: inline-block;
     padding: 12px 25px;
@@ -90,10 +92,12 @@ export default {
     border-radius: 15px;
     background-color: cornflowerblue;
   }
+
   button:hover, button:focus {
     box-shadow: 0 6px #999;
     transform: translateY(-5px);
   }
+
   button:active {
     background-color: #5a86d5;
     box-shadow: 0 4px #555555;
