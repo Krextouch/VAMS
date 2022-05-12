@@ -13,6 +13,5 @@ public class ReservationFilter {
     private LocalDateTime endTimeFrame;
     private Boolean isVerified;
     private String vehicleVin;
-    private int employeeId;
     private boolean showAllEmployees;
 }

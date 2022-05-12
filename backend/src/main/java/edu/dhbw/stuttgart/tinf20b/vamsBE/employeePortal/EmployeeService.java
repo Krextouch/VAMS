@@ -225,15 +225,17 @@ public class EmployeeService {
         }
 
         if (reservationFilter.getVehicleVin() != null) {
-            List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
-            int i = 0;
-            int removedObjects = 0;
-            for (ReservationParam tmpReservationParam : tmpReservationParamList) {
-                if (!(reservationFilter.getVehicleVin().equals(tmpReservationParam.getVehicleVin()))) {
-                    reservationParamList.remove(i - removedObjects);
-                    removedObjects++;
+            if (!(reservationFilter.getVehicleVin().isBlank())) {
+                List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
+                int i = 0;
+                int removedObjects = 0;
+                for (ReservationParam tmpReservationParam : tmpReservationParamList) {
+                    if (!(reservationFilter.getVehicleVin().equals(tmpReservationParam.getVehicleVin()))) {
+                        reservationParamList.remove(i - removedObjects);
+                        removedObjects++;
+                    }
+                    i++;
                 }
-                i++;
             }
         }
 
