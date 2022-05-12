@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/office/api/v1")
 public interface OfficePortalController {
 
+    @GetMapping("/devtools")
+    String devTools();
+
     @PostMapping("/createEmployee")
     void createEmployee(@RequestBody Employee employee);
 

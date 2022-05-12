@@ -6,6 +6,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,10 +15,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class OfficePortalControllerImpl implements OfficePortalController {
 
     private final OfficeService officeService;
+    private final BuildProperties buildProperties;
 
     @Autowired
-    public OfficePortalControllerImpl(OfficeService officeService) {
+    public OfficePortalControllerImpl(OfficeService officeService, BuildProperties buildProperties) {
         this.officeService = officeService;
+        this.buildProperties = buildProperties;
+    }
+
+    @Override
+    public String devTools() {
+        return "Version " + buildProperties.getVersion() + " | Build " + buildProperties.getTime();
     }
 
     @Override
