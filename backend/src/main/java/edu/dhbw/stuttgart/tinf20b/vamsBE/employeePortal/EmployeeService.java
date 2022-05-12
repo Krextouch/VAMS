@@ -183,6 +183,19 @@ public class EmployeeService {
 
     public List<ReservationParam> applyFilters(List<ReservationParam> reservationParamList, ReservationFilter reservationFilter) {
 
+        if (reservationFilter.getEmployeeId() != null) {
+            List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
+            int i = 0;
+            int removedObjects = 0;
+            for (ReservationParam tmpReservationParam : tmpReservationParamList) {
+                if (!(Integer.parseInt(reservationFilter.getEmployeeId()) == tmpReservationParam.getEmployeeId())) {
+                    reservationParamList.remove(i - removedObjects);
+                    removedObjects++;
+                }
+                i++;
+            }
+        }
+
         if (reservationFilter.getStartTimeFrame() != null) {
             List<ReservationParam> tmpReservationParamList = new ArrayList<>(reservationParamList);
             int i = 0;
