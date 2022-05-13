@@ -1,7 +1,7 @@
 <template>
   <div class="list-wrapper">
     <ul>
-      <li class="rsvtn-wrapper" v-for="rsvtn in reservationParamList" :key="rsvtn.id" v-on:click="updateReservation(rsvtn)">
+      <li class="rsvtn-wrapper" v-for="rsvtn in allReservationList" :key="rsvtn.id" v-on:click="updateReservation(rsvtn)">
         <div class="param-wrapper">
           <span class="rsvtn-param" v-for="(value, name) in rsvtn" :key="name" :class="name">{{ value }}</span>
           <span v-if="rsvtn.isVerified" class="tooltip">
@@ -15,7 +15,7 @@
         </div>
       </li>
     </ul>
-    <div class="info" id="empty-list" v-if="reservationParamList.length == 0">
+    <div class="info" id="empty-list" v-if="allReservationList.length == 0">
       <span>Zurzeit keine Reservierungen verfügbar</span>
     </div>
   </div>
@@ -40,30 +40,15 @@ export default {
       }
       }).then(
         res => {
-          this.handleResponseData(res)
-          console.log(res)
-        }).catch(err => {
-      console.log("err: ", err)
+          this.handleResponseData(res.data)
+        }).catch(
+        err => {
+          console.log("err: ", err)
     })
   },
   data() {
     return {
-      reservationParamList: [
-          {id: 0, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 1, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 2, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 3, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 4, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 5, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 6, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 7, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 8, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 9, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 10, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 11, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 12, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 13, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0}
-      ]
+      allReservationList: Array
     }
   },
   methods: {
@@ -72,11 +57,11 @@ export default {
     },
     formatDate(_dateStr) {
       const date = new Date(_dateStr)
-      console.log(_dateStr, " erstellt: ", date)
+      // console.log(_dateStr, " erstellt: ", date)
       return date.getDay() + "." + date.getMonth() + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
     },
-    handleResponseData(resList) {
-      let allReservationList = []
+    handleResponseData(data) {
+      let resList = data.reservationParamList
       resList.forEach(rsvtn => {
         let formattedStartTime = this.formatDate(rsvtn.startTimeOfReservation)
         let formattedEndTime = this.formatDate(rsvtn.endTimeOfReservation)
@@ -88,10 +73,8 @@ export default {
           vehicleVin: rsvtn.vehicleVin,
           employeeId: rsvtn.employeeId
         }
-        // console.log(tempRsvtnObj)
-        allReservationList.push(tempRsvtnObj)
+        this.allReservationList.push(tempRsvtnObj)
       })
-      return allReservationList
     }
   }
 }
