@@ -23,7 +23,7 @@ public interface OfficePortalController {
     @PutMapping("/updateEmployee/{employeeId}")
     void updateEmployee(@PathVariable("employeeId") int employeeId, @RequestBody Employee employee);
 
-    @GetMapping("/allEmployee")
+    @PostMapping("/allEmployee")
     AllEmployeeResponse allEmployee(@RequestBody AllEmployeeFilter allEmployeeFilter);
 
     @PostMapping("/createVehicle")

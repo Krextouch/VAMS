@@ -19,13 +19,13 @@ public interface EmployeePortalController {
     @DeleteMapping("/deleteReservation/{reservationId}")
     void deleteReservation(@PathVariable("reservationId") int reservationId, @RequestHeader("Authorization") String authorization);
 
-    @GetMapping("/getAvailableVehicle")
+    @PostMapping("/getAvailableVehicle")
     AvailableVehicleResponse getAvailableVehicle(@RequestParam("start") LocalDateTime startTime, @RequestParam("end") LocalDateTime endTime);
 
     @GetMapping("/getReservatedVehicle")
     SingleEmployeeReservationResponse getReservedVehicle(@RequestHeader("Authorization") String authorization);
 
-    @GetMapping("/allReservations")
+    @PostMapping("/allReservations")
     ReservationResponse allReservations(@RequestBody ReservationFilter reservationFilter, @RequestHeader("Authorization") String authorization);
 
     @PostMapping("/passwordReset")
