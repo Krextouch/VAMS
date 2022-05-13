@@ -1,27 +1,29 @@
 <template>
-  <menu-bar/>
+
   <router-view/>
-  <div style="height: 1000px; width: 50px; background-color:lightgoldenrodyellow;"></div>
+
 </template>
 
 <script>
-import menuBar from './components/menuBar.vue'
-
 export default {
-  name: 'App',
-  components: {
-    menuBar
-  }
+  name: 'App'
 }
 </script>
 
 <style>
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  padding: 0;
 }
 </style>
