@@ -1,8 +1,8 @@
 <template>
   <navBar />
   <div class="content-wrapper">
-    <allRsvtnList />
-    <updateRsvtn />
+    <allRsvtnList @rsvtnClicked="updateRsvtn($event)"/>
+    <updateRsvtn :rsvtnToUpdate="rsvtnToUpdate"/>
   </div>
 </template>
 
@@ -18,10 +18,14 @@ export default {
     allRsvtnList,
     updateRsvtn
   },
-
   data() {
     return {
-
+      rsvtnToUpdate: null
+    }
+  },
+  methods: {
+    updateRsvtn(rsvtnToUpdate) {
+      this.rsvtnToUpdate = rsvtnToUpdate
     }
   }
 }
