@@ -1,5 +1,6 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.security;
 
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.model.DisabledTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,11 +19,16 @@ public class WebAuthenticationFilter extends OncePerRequestFilter {
 
     private JwtTokenProvider jwtTokenProvider;
     private UserAuthorizationService webAuthorizationService;
+    private DisabledTokenRepository disabledTokenRepository;
 
     @Autowired
-    public WebAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserAuthorizationService webAuthorizationService) {
+    public WebAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
+                                   UserAuthorizationService webAuthorizationService,
+                                   DisabledTokenRepository disabledTokenRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.webAuthorizationService = webAuthorizationService;
+        this.disabledTokenRepository = disabledTokenRepository;
+
     }
 
     @Override
@@ -31,13 +37,17 @@ public class WebAuthenticationFilter extends OncePerRequestFilter {
 
         //Check JWT and if it is valid
         if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            String email = jwtTokenProvider.getUserMailFromToken(token);
-            UserDetails user = webAuthorizationService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-            //give clearance to spring security
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            //Check if token is not on blacklist
+            if (disabledTokenRepository.findByToken(token).isEmpty()) {
+                String email = jwtTokenProvider.getUserMailFromToken(token);
+                UserDetails user = webAuthorizationService.loadUserByUsername(email);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+                //give clearance to spring security
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
         filterChain.doFilter(request, response);

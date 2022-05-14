@@ -1,5 +1,6 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.security;
 
+import edu.dhbw.stuttgart.tinf20b.vamsBE.security.model.DisabledTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,14 +21,17 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
     private final WebAuthEntryPoint webAuthEntryPoint;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserAuthorizationService webAuthorizationService;
+    private final DisabledTokenRepository disabledTokenRepository;
 
     @Autowired
     public WebAuthorizationConfig(JwtTokenProvider jwtTokenProvider,
                                   UserAuthorizationService webAuthorizationService,
-                                  WebAuthEntryPoint webAuthEntryPoint) {
+                                  WebAuthEntryPoint webAuthEntryPoint,
+                                  DisabledTokenRepository disabledTokenRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.webAuthorizationService = webAuthorizationService;
         this.webAuthEntryPoint = webAuthEntryPoint;
+        this.disabledTokenRepository = disabledTokenRepository;
     }
 
     //Configure endpoints settings
@@ -44,7 +48,7 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
                 //Public uris
                 .antMatchers("/error", "/unauthorized", "/auth/api/v1/login", "/raspi/**", "/").permitAll()
                 //Employee uris
-                .antMatchers("/employee/**").hasRole("EMPLOYEE")
+                .antMatchers("/employee/**", "/auth/api/v1/logout", "/auth/api/v1/renew").hasRole("EMPLOYEE")
                 //Office uris
                 .antMatchers("/office/**").hasRole("OFFICE")
                 .anyRequest().authenticated()
@@ -67,6 +71,6 @@ public class WebAuthorizationConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public WebAuthenticationFilter authenticationFilter() {
-        return new WebAuthenticationFilter(this.jwtTokenProvider, this.webAuthorizationService);
+        return new WebAuthenticationFilter(this.jwtTokenProvider, this.webAuthorizationService, this.disabledTokenRepository);
     }
 }
