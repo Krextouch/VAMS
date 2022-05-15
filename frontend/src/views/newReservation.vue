@@ -27,14 +27,18 @@ export default {
   props: {
   },
   created() {
-    axios.get('employee/api/v1/getAvailableVehicle', {params: {
-        start: null
-      }, headers: {
+    axios.post('employee/api/v1/getAvailableVehicle', null, {
+      headers: {
         'Authorization': "Bearer " + localStorage.token
-      }}).then(
+      },
+      params: {
+        start: null,
+        end: null
+      }
+    }).then(
         res => {
           console.log("getVehicle response", res)
-          this.availableVehicles = res
+          // this.availableVehicles = res.data
         }).catch(err => {
       console.log("getVehicle err: ", err)
     })
@@ -48,13 +52,15 @@ export default {
   },
   methods: {
     async sendNewRsvtn() {
-      const response = await axios.post('employee/api/v1/createReservation', {params: {
+      const response = await axios.post('employee/api/v1/createReservation', {
           start_time_of_reservation: null,
           end_time_of_reservation: null,
           vin: null
-        }, headers: {
-          'Authorization': "Bearer " + localStorage.token
-        }}).catch(err => {
+        }, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+      }).catch(err => {
           console.log("create err: ", err)
       });
       if (response) console.log("create response: ", response)
@@ -67,7 +73,6 @@ export default {
 <style scoped>
 .card-wrapper {
   width: 40vw;
-  /*height: calc(96vh - 96px - 2px);*/
   background: dimgray;
   padding: 0;
   margin: 5vh auto;

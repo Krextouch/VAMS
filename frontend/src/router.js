@@ -4,9 +4,11 @@ import HomePage from "@/views/home.vue";
 import NotFound from "@/views/NotFound.vue";
 import newReservation from "@/views/newReservation";
 import officePortal from "@/views/office";
+import account from "@/views/account";
 
 const routes = [
         {path: '/login', name: 'Login', component: LoginMask},
+        {path: '/account', name: 'Account', component: account, meta: {requiresAuth: true}},
         {path: '/home', name: 'Home', component: HomePage, meta: {requiresAuth: true}},
         {path: '/home/office', name: 'Office', component: officePortal, meta: {requiresAuth: true}},
         {path: '/newReservation', name: 'newReservation', component: newReservation, meta: {requiresAuth: true}},
@@ -23,9 +25,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
+        console.log("meta auth")
         const currentTime = Date.now()
-        const expirationDate = new Date(localStorage.expires)
-        if (!localStorage.token || (expirationDate < currentTime)) {
+        const expirationTime = new Date(localStorage.expires)
+        if (!localStorage.token || (expirationTime < currentTime)) {
             next({ name: 'Login' })
         } else {
             next()

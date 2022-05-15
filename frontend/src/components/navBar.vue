@@ -12,7 +12,8 @@
         <ul>
           <li v-if="this.hasOfficeRights === 'true' && this.$route.fullPath === '/home'"><router-link :to="{ name: 'Office' }">Admin Portal</router-link></li>
           <li v-if="this.hasOfficeRights === 'true' && this.$route.fullPath === '/home/office'"><router-link :to="{ name: 'Home' }">Employee</router-link></li>
-          <li id="logout"><a v-on:click="logout()"><img src="../assets/logout_white.png" alt="Log Out"></a></li>
+          <li class="icon" id="account"><router-link :to="{ name: 'Account' }"><img src="../assets/account.png" alt="Account settings"></router-link></li>
+          <li class="icon" id="logout"><a v-on:click="logout()"><img src="../assets/logout_white.png" alt="Log Out"></a></li>
         </ul>
       </div>
   </nav>
@@ -25,7 +26,6 @@ export default {
   props: {},
   created() {
     this.hasOfficeRights = localStorage.getItem('hasOfficeRights')
-    console.log(this.$route.fullPath === '/home/office')
   },
   data() {
     return{
@@ -83,13 +83,13 @@ li a, li router-link {
   font-weight: bold;
 }
 
-#logout img {
+.icon img {
   height: 24px;
   width: 24px;
   margin: auto;
 }
 
-#logout a {
+.icon a {
   padding: 18px 26px;
 }
 
