@@ -9,7 +9,7 @@
       </div>
       <div class="nav-elmts-group" id="right">
         <ul>
-          <li><router-link :to="{ name: '' }">Office</router-link></li>
+          <li v-if="this.hasOfficeRights === 'true'"><router-link :to="{ name: '' }">Admin Portal</router-link></li>
           <li id="logout"><a v-on:click="logout()"><img src="../assets/logout_white.png" alt="Log Out"></a></li>
         </ul>
       </div>
@@ -17,16 +17,32 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "navBar",
   props: {},
+  created() {
+    this.hasOfficeRights = localStorage.getItem('hasOfficeRights')
+  },
   data() {
-    return{}
+    return{
+      hasOfficeRights: ''
+    }
   },
   methods: {
-    logout() {
-      localStorage.clear()
-      this.$router.push('/login')
+    async logout() {
+      const response = await axios.post("auth/api/v1/logout", {}, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+      })
+      if (response.status == '200') {
+        localStorage.clear()
+        sessionStorage.clear()
+        this.$router.push('/login')
+      } else {
+        console.log("Logout not completed")
+      }
     }
   }
 }
