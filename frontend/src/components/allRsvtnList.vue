@@ -3,7 +3,9 @@
     <ul>
       <li class="rsvtn-wrapper" v-for="rsvtn in allReservationList" :key="rsvtn.id" v-on:click="updateReservation(rsvtn)">
         <div class="param-wrapper">
-          <span class="rsvtn-param" v-for="(value, name) in rsvtn" :key="name" :class="name">{{ value }}</span>
+<!--          <span class="rsvtn-param" v-for="(value, name) in rsvtn" :key="name" :class="name">{{ value }}</span>-->
+          <span class="rsvtn-param startTime">{{ rsvtn.startTimeOfReservation }}</span>
+          <span class="rsvtn-param endTime">{{ rsvtn.endTimeOfReservation }}</span>
           <span v-if="rsvtn.isVerified" class="tooltip">
               <img src="../assets/verified.png" alt="Verified">
               <span class="tooltiptext">Verifiziert</span>
@@ -48,16 +50,16 @@ export default {
   },
   data() {
     return {
-      allReservationList: Array
+      allReservationList: []
     }
   },
   methods: {
-    updateReservation(rsvtn) {
-      console.log("clicked reservation of id:", rsvtn.id)
+    updateReservation(rsvtnToUpdate) {
+      console.log("clicked reservation of id:", rsvtnToUpdate.id)
+      this.$emit('rsvtnClicked', rsvtnToUpdate);
     },
     formatDate(_dateStr) {
       const date = new Date(_dateStr)
-      // console.log(_dateStr, " erstellt: ", date)
       return date.getDay() + "." + date.getMonth() + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
     },
     handleResponseData(data) {
