@@ -1,7 +1,7 @@
 <template>
   <navBar />
 <!--  <h1> Erstelle neue Reservierung </h1>-->
-  <div class="form-wrapper">
+  <div class="card-wrapper">
     <h2>Neue Reservierung erstellen</h2>
     <form @submit.prevent="sendNewRsvtn">
       <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit" />
@@ -65,7 +65,7 @@ export default {
 </script>
 
 <style scoped>
-.form-wrapper {
+.card-wrapper {
   width: 40vw;
   /*height: calc(96vh - 96px - 2px);*/
   background: dimgray;

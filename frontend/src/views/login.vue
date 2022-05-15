@@ -24,13 +24,18 @@ export default {
   },
   methods: {
     async handleSubmit() {
-        const response = await axios.post('auth/api/v1/login', {
-          username: this.username,
-          password: this.password
-        });
+      const response = await axios.post('auth/api/v1/login', {
+        username: this.username,
+        password: this.password
+      });
+      if (response.status === 200) {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('expires', response.data.expiration)
+        localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
+      } else {
+        alert("")
+      }
     }
   }
 }

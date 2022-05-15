@@ -1,14 +1,17 @@
 <template>
-  <div class="list-wrapper">
-    <form @submit.prevent="" v-if="rsvtnToUpdate">
-      <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit" :value="this.rsvtnToUpdate.startTimeOfReservation"/>
-      <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit" :value="this.rsvtnToUpdate.endTimeOfReservation"/>
-      <select class="vehicles" id="vehicles">
-        <option id="default">-- Fahrzeug wählen --</option>
-        <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
-      </select>
-      <button type="submit">Erstellen</button>
-    </form>
+  <div class="card-wrapper">
+    <div class="content" v-if="rsvtnToUpdate">
+      <form @submit.prevent="updateRsvtn">
+        <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit"/>
+        <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit"/>
+        <select class="vehicles" id="vehicles">
+          <option id="default">-- Fahrzeug wählen --</option>
+          <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
+        </select>
+        <button type="submit">Abschicken</button>
+      </form>
+      <button id="delete" @click="deleteRsvtn">Stornieren</button>
+    </div>
     <div class="info" id="none-selected" v-if="!rsvtnToUpdate">
       <span>Wähle eine Reservierung um zu bearbeiten</span>
     </div>
@@ -16,6 +19,8 @@
 </template>
 
 <script>
+// import axios from "axios";
+
 export default {
   name: "updateRsvtn",
   props: ['rsvtnToUpdate'],
@@ -30,13 +35,35 @@ export default {
     }
   },
   methods: {
-
+    async updateRsvtn() {
+      console.log("update rsvtn of id: ", this.rsvtnToUpdate.id)
+      // const response = await axios.put(`employee/api/v1/updateReservation/${this.rsvtnToUpdate.id}`, {
+      //   "id": 0,
+      //   "startTimeOfReservation": 0,
+      //   "endTimeOfReservation": 0,
+      //   "isVerified": 0,
+      //   "vehicle": 0,
+      //   "employee": 0,
+      // }, {
+      //   headers: {
+      //     "Authorization": "Bearer " + localStorage.token
+      //   }
+      // })
+    },
+    async deleteRsvtn() {
+      console.log("delete rsvtn of id: ", this.rsvtnToUpdate.id)
+      // const response = await axios.delete(`employee/api/v1/deleteReservation/${this.rsvtnToUpdate.id}`, {
+      //   headers: {
+      //     "Authorization": "Bearer " + localStorage.token
+      //   }
+      // })
+    }
   }
 }
 </script>
 
 <style scoped>
-.list-wrapper {
+.card-wrapper {
   width: 40vw;
   height: calc(90vh - 96px - 2px);
   background: dimgray;
@@ -55,17 +82,6 @@ export default {
 #none-selected {
   position: relative;
   top: 50%;
-}
-
-.form-wrapper {
-  width: 40vw;
-  /*height: calc(96vh - 96px - 2px);*/
-  background: dimgray;
-  padding: 0;
-  margin: 5vh auto;
-  border: 2px solid gray;
-  border-radius: 5px;
-  box-shadow: inset 0 0 1em black;
 }
 
 h2 {
@@ -112,26 +128,7 @@ button:active {
   transform: translateY(5px);
 }
 
-/*
-Scrollbar styles imported from:
-  https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/
-*/
-
-.list-wrapper::-webkit-scrollbar-track
-{
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-  background-color: #F5F5F5;
-}
-
-.list-wrapper::-webkit-scrollbar
-{
-  width: 10px;
-  background-color: #F5F5F5;
-}
-
-.list-wrapper::-webkit-scrollbar-thumb
-{
-  background-color: rgb(18, 18, 18);
-  border: 2px solid dimgray;
+button#delete {
+  background-color: orangered;
 }
 </style>

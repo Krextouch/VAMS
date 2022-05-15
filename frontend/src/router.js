@@ -3,10 +3,12 @@ import LoginMask from './views/login.vue'
 import HomePage from "@/views/home.vue";
 import NotFound from "@/views/NotFound.vue";
 import newReservation from "@/views/newReservation";
+import officePortal from "@/views/office";
 
 const routes = [
         {path: '/login', name: 'Login', component: LoginMask},
         {path: '/home', name: 'Home', component: HomePage, meta: {requiresAuth: true}},
+        {path: '/home/office', name: 'Office', component: officePortal, meta: {requiresAuth: true}},
         {path: '/newReservation', name: 'newReservation', component: newReservation, meta: {requiresAuth: true}},
         // catchAll 404
         {path: '/:catchAll(.*)', name: 'NotFound', component: NotFound},

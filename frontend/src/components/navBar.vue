@@ -5,11 +5,13 @@
           <li><a href="./home">VAMS</a></li>
           <li><router-link :to="{ name: 'Home' }">Reservierungen</router-link></li>
           <li><router-link :to="{ name: 'newReservation' }">Neue Reservierung</router-link></li>
+          <li v-if="this.hasOfficeRights"><router-link :to="{ name: '' }">Neues Fahrzeug</router-link></li>
         </ul>
       </div>
       <div class="nav-elmts-group" id="right">
         <ul>
-          <li v-if="this.hasOfficeRights === 'true'"><router-link :to="{ name: '' }">Admin Portal</router-link></li>
+          <li v-if="this.hasOfficeRights === 'true' && this.$route.fullPath === '/home'"><router-link :to="{ name: 'Office' }">Admin Portal</router-link></li>
+          <li v-if="this.hasOfficeRights === 'true' && this.$route.fullPath === '/home/office'"><router-link :to="{ name: 'Home' }">Employee</router-link></li>
           <li id="logout"><a v-on:click="logout()"><img src="../assets/logout_white.png" alt="Log Out"></a></li>
         </ul>
       </div>
@@ -23,6 +25,7 @@ export default {
   props: {},
   created() {
     this.hasOfficeRights = localStorage.getItem('hasOfficeRights')
+    console.log(this.$route.fullPath === '/home/office')
   },
   data() {
     return{

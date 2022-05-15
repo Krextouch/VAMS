@@ -1,5 +1,5 @@
 <template>
-  <div class="list-wrapper">
+  <div class="card-wrapper">
     <ul>
       <li class="rsvtn-wrapper" v-for="rsvtn in allReservationList" :key="rsvtn.id" v-on:click="updateReservation(rsvtn)">
         <div class="param-wrapper">
@@ -83,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.list-wrapper {
+.card-wrapper {
   width: 40vw;
   height: calc(94vh - 96px - 2px);
   background: dimgray;
