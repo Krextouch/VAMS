@@ -5,13 +5,11 @@
           <li class="icon" id="logo"><img src="../assets/Logo.png" alt="VAMS Logo"></li>
           <li><router-link :to="{ name: 'Home' }">Reservierungen</router-link></li>
           <li><router-link :to="{ name: 'newReservation' }">Neue Reservierung</router-link></li>
-          <li v-if="this.hasOfficeRights"><router-link :to="{ name: '' }">Neues Fahrzeug</router-link></li>
         </ul>
       </div>
       <div class="nav-elmts-group" id="right">
         <ul>
-          <li v-if="this.hasOfficeRights === 'true' && this.$route.fullPath === '/home'"><router-link :to="{ name: 'Office' }">Admin Portal</router-link></li>
-          <li v-if="this.hasOfficeRights === 'true' && this.$route.fullPath === '/home/office'"><router-link :to="{ name: 'Home' }">Employee</router-link></li>
+          <li v-if="this.hasOfficeRights === 'true'"><router-link :to="{ name: 'OfficeHome' }">zum Admin Portal</router-link></li>
           <li class="icon" id="account"><router-link :to="{ name: 'Account' }"><img src="../assets/account.png" alt="Account settings"></router-link></li>
           <li class="icon" id="logout"><a v-on:click="logout()"><img src="../assets/logout_white.png" alt="Log Out"></a></li>
         </ul>
@@ -23,7 +21,6 @@
 import axios from "axios";
 export default {
   name: "navBar",
-  props: {},
   created() {
     this.hasOfficeRights = localStorage.getItem('hasOfficeRights')
   },
@@ -44,6 +41,7 @@ export default {
         sessionStorage.clear()
         this.$router.push('/login')
       } else {
+        this.$emit('infoPopup', ["err", "Konnte nicht ausgeloggt werden"])
         console.log("Logout not completed")
       }
     }

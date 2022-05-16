@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginMask from './views/login.vue'
-import HomePage from "@/views/home.vue";
-import NotFound from "@/views/NotFound.vue";
-import newReservation from "@/views/newReservation";
-import officePortal from "@/views/office";
 import account from "@/views/account";
+import office from "@/views/office/office";
+import officeHome from "@/views/office/officeHome";
+import vehicles from "@/views/office/vehicles";
+import employees from "@/views/office/employees";
+import HomePage from "@/views/home.vue";
+import newReservation from "@/components/employee/newReservation";
+import NotFound from "@/views/NotFound.vue";
 
 const routes = [
         {
@@ -15,8 +18,32 @@ const routes = [
         {
             path: '/account',
             name: 'Account',
-            omponent: account,
+            component: account,
             meta: {requiresAuth: true}
+        },
+        {
+            path: '/office',
+            redirect: '/office/home',
+            name: 'Office',
+            component: office,
+            meta: {requiresAuth: true},
+            children: [
+                {
+                    path: 'home',
+                    name: 'OfficeHome',
+                    component: officeHome
+                },
+                {
+                    path: 'vehicles',
+                    name: 'allVehicles',
+                    component: vehicles
+                },
+                {
+                    path: 'employees',
+                    name: 'allEmployees',
+                    component: employees
+                }
+            ]
         },
         {
             path: '/home',
@@ -25,25 +52,21 @@ const routes = [
             meta: {requiresAuth: true}
         },
         {
-            path: '/home/office',
-            name: 'Office',
-            component: officePortal,
-            meta: {requiresAuth: true}
-        },
-        {
             path: '/newReservation',
             name: 'newReservation',
             component: newReservation,
             meta: {requiresAuth: true}
         },
-        // catchAll 404
-        {
-            path: '/:catchAll(.*)', name: 'NotFound', component: NotFound
-        },
         // redirect
         {
             path: '/',
             redirect: '/home'
+        },
+        // catchAll 404
+        {
+            path: '/:catchAll(.*)',
+            name: 'NotFound',
+            component: NotFound
         },
 ]
 
@@ -54,7 +77,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        console.log("meta auth")
         const currentTime = Date.now()
         const expirationTime = new Date(localStorage.expires)
         if (!localStorage.token || (expirationTime < currentTime)) {
