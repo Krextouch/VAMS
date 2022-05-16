@@ -1,14 +1,13 @@
 <template>
-<!--  <navBar />-->
   <div class="content-wrapper">
-    <allRsvtnList @rsvtnClicked="updateRsvtn($event)"/>
+    <allRsvtnList @rsvtnClicked="updateRsvtn($event)" hasOfficeRights="false"/>
     <updateRsvtn :rsvtnToUpdate="rsvtnToUpdate"/>
   </div>
 </template>
 
 <script>
-import allRsvtnList from '../components/allRsvtnList.vue'
-import updateRsvtn from '../components/updateRsvtn.vue'
+import allRsvtnList from '@/components/allRsvtnList.vue'
+import updateRsvtn from '@/components/updateRsvtn.vue'
 
 export default {
   name: "HomePage",
@@ -18,7 +17,7 @@ export default {
   },
   data() {
     return {
-      rsvtnToUpdate: null
+      rsvtnToUpdate: null,
     }
   },
   methods: {
@@ -35,5 +34,4 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-
 </style>

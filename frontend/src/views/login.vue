@@ -29,12 +29,13 @@ export default {
         username: this.username,
         password: this.password
       }).catch(err => {
-        console.log("login err", err)
+        console.log(err)
+        this.$emit('infoPopup', ["error", "Login error"])
       })
       if (response && response.status === 200) {
-        console.log("200er")
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('expires', response.data.expiration)
+        localStorage.setItem('employeeId', response.data.employeeId)
         localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
       } else {

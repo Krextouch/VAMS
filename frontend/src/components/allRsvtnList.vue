@@ -24,29 +24,33 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   name: "allRsvtnList",
-  created () {
-    axios.post('employee/api/v1/allReservations', {
-        "startTimeFrame": null,
-        "endTimeFrame": null,
-        "isVerified": null,
-        "vehicleVin": null,
-        "employeeId": 2,
-        "showAllEmployees": null
-      }, {
-      headers: {
-        "Authorization": "Bearer " + localStorage.token
-      }
-      }).then(
-        res => {
-          this.handleResponseData(res.data)
-        }).catch(
-        err => {
-          console.log("err: ", err)
-    })
+  props: [
+      'showAllEmployees'
+  ],
+  created() {
+    // let data = {
+    //   "startTimeFrame": null,
+    //   "endTimeFrame": null,
+    //   "isVerified": null,
+    //   "vehicleVin": null,
+    //   "employeeId": this.showAllEmployees === 'true' ? null : parseInt(localStorage.getItem('employeeId')),
+    //   "showAllEmployees": this.showAllEmployees === 'true'
+    // }
+    // axios.post('employee/api/v1/allReservations', data, {
+    //   headers: {
+    //     "Authorization": "Bearer " + localStorage.token
+    //   }
+    //   }).then(
+    //     res => {
+    //       this.handleResponseData(res.data)
+    //     }).catch(
+    //     err => {
+    //       console.log("err: ", err)
+    // })
   },
   data() {
     return {

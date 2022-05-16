@@ -2,12 +2,21 @@
   <div class="card-wrapper">
     <h2>Neue Reservierung erstellen</h2>
     <form @submit.prevent="sendNewRsvtn">
-      <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit" />
-      <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit" />
-      <select class="vehicles" id="vehicles">
-        <option id="default">-- Fahrzeug wählen --</option>
-        <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
-      </select>
+      <div class="inp-wrapper">
+        <label for="start-time">Beginn</label>
+        <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit" />
+      </div>
+      <div class="inp-wrapper">
+        <label for="end-time">Ende</label>
+        <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit" />
+      </div>
+      <div class="inp-wrapper">
+        <label for="vehicles">Verfügbare Fahrzeuge</label>
+        <select class="vehicles" id="vehicles">
+          <option id="default">-- Fahrzeug wählen --</option>
+          <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
+        </select>
+      </div>
       <button type="submit">Erstellen</button>
     </form>
   </div>
@@ -20,24 +29,22 @@ export default {
   name: "newReservation",
   components: {
   },
-  props: {
-  },
   created() {
-    axios.post('employee/api/v1/getAvailableVehicle', null, {
-      headers: {
-        'Authorization': "Bearer " + localStorage.token
-      },
-      params: {
-        start: null,
-        end: null
-      }
-    }).then(
-        res => {
-          console.log("getVehicle response", res)
-          // this.availableVehicles = res.data
-        }).catch(err => {
-      console.log("getVehicle err: ", err)
-    })
+    // axios.post('employee/api/v1/getAvailableVehicle', null, {
+    //   headers: {
+    //     'Authorization': "Bearer " + localStorage.token
+    //   },
+    //   params: {
+    //     start: null,
+    //     end: null
+    //   }
+    // }).then(
+    //     res => {
+    //       console.log("getVehicle response", res)
+    //       // this.availableVehicles = res.data
+    //     }).catch(err => {
+    //   console.log("getVehicle err: ", err)
+    // })
   },
   data() {
     return {
@@ -87,12 +94,31 @@ form {
   padding: 5vh 1vw;
 }
 
+.inp-wrapper {
+  color: black;
+  font-weight: bold;
+  padding: 0 50px;
+}
+
+label {
+  margin: 5px 0;
+}
+
 input, select {
-  width: 66%;
-  margin: 0 10% 10% 10%;
+  margin: 1% 10% 5% 10%;
   padding: 10px;
   font-size: medium;
   border-radius: 30px;
+}
+
+select {
+  width: 80%;
+  min-width: 200px;
+}
+
+input {
+  width: calc(80% - 24px);
+  min-width: 176px;
 }
 
 button {

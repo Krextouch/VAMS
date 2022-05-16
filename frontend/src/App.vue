@@ -1,6 +1,6 @@
 <template>
 
-  <navBar v-if="this.$route.fullPath !== '/login'" />
+  <navBar v-if="this.$route.fullPath !== '/login' && this.$route.fullPath.includes('/office') <= 0" />
   <router-view @infoPopup="handleInfo($event)"/>
   <errorMsg v-if="this.infoMsg[1] !== ''" v-show="showInfo" :info="this.infoMsg" />
 

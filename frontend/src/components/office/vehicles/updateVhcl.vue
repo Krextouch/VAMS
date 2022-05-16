@@ -1,16 +1,10 @@
 <template>
   <div class="card-wrapper">
-    <div class="content" v-if="rsvtnToUpdate">
-      <form @submit.prevent="updateRsvtn">
-        <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit"/>
-        <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit"/>
-        <select class="vehicles" id="vehicles">
-          <option id="default">-- Fahrzeug wählen --</option>
-          <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
-        </select>
+    <div class="content" v-if="vhclToUpdate">
+      <form @submit.prevent="updateVhcl">
         <button type="submit">Abschicken</button>
       </form>
-      <button id="delete" @click="deleteRsvtn">Stornieren</button>
+      <button id="delete" @click="deleteVhcl">Löschen</button>
     </div>
     <div class="info" id="none-selected" v-if="!rsvtnToUpdate">
       <span>Wähle eine Reservierung um zu bearbeiten</span>
@@ -22,37 +16,28 @@
 // import axios from "axios";
 
 export default {
-  name: "updateRsvtn",
-  props: ['rsvtnToUpdate'],
+  name: "updateVhcl",
+  props: ['vhclToUpdate'],
   updated() {
-    console.log("received rsvtn: ", this.rsvtnToUpdate)
+    console.log("received vhcl: ", this.vhclToUpdate)
   },
   data(){
     return {
-      starttime: '',
-      endtime: '',
-      availableVehicles: []
     }
   },
   methods: {
-    async updateRsvtn() {
-      console.log("update rsvtn of id: ", this.rsvtnToUpdate.id)
-      // const response = await axios.put(`employee/api/v1/updateReservation/${this.rsvtnToUpdate.id}`, {
-      //   "id": 0,
-      //   "startTimeOfReservation": 0,
-      //   "endTimeOfReservation": 0,
-      //   "isVerified": 0,
-      //   "vehicle": 0,
-      //   "employee": 0,
+    async updateVhcl() {
+      console.log("update vhcl of id: ", this.vhclToUpdate.id)
+      // const response = await axios.put(`office/api/v1/updateVehicle/${this.vhclToUpdate.id}`, {
       // }, {
       //   headers: {
       //     "Authorization": "Bearer " + localStorage.token
       //   }
       // })
     },
-    async deleteRsvtn() {
-      console.log("delete rsvtn of id: ", this.rsvtnToUpdate.id)
-      // const response = await axios.delete(`employee/api/v1/deleteReservation/${this.rsvtnToUpdate.id}`, {
+    async deleteVhcl() {
+      console.log("delete vhcl of id: ", this.vhclToUpdate.id)
+      // const response = await axios.delete(`employee/api/v1/deleteVhcl/${this.vhclToUpdate.id}`, {
       //   headers: {
       //     "Authorization": "Bearer " + localStorage.token
       //   }
