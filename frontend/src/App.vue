@@ -1,8 +1,8 @@
 <template>
 
   <navBar v-if="this.$route.fullPath !== '/login'" />
-  <router-view @errThrown="handleError($event)"/>
-  <errorMsg v-show="showErr" :errmsg="this.errMsg" />
+  <router-view @infoPopup="handleInfo($event)"/>
+  <errorMsg v-if="this.infoMsg[1] !== ''" v-show="showInfo" :info="this.infoMsg" />
 
 </template>
 
@@ -18,16 +18,16 @@ export default {
   },
   data() {
     return {
-      errMsg: null,
-      showErr: false
+      infoMsg: ["", ""],
+      showInfo: false
     }
   },
   methods: {
-    handleError(err) {
-      this.errMsg = err
-      this.showErr = true
+    handleInfo(err) {
+      this.infoMsg = err
+      this.showInfo = true
       setTimeout(() => {
-        this.showErr = false
+        this.showInfo = false
       }, 2500)
     }
   }

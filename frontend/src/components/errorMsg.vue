@@ -1,6 +1,6 @@
 <template>
-  <div class="err-wrapper" >
-    <span>{{ errmsg }}</span>
+  <div class="info-wrapper" :class="info[0]">
+    <span>{{ info[1] }}</span>
   </div>
 </template>
 
@@ -8,22 +8,33 @@
 export default {
   name: "errorMsg",
   props: [
-    'errmsg'
+    'info'
   ]
 }
 </script>
 
 <style scoped>
-.err-wrapper {
+.info-wrapper {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(255, 50, 50, 0.65);
   margin: 10px 0;
   padding: 15px 30px;
-  border: 2px solid darkred;
   border-radius: 10px;
   color: #222222ba;
+}
+
+.error {
+  background-color: rgba(255, 50, 50, 0.65);
+  border: 2px solid darkred;
+}
+.info {
+  background-color: rgba(218, 165, 32, 0.65);
+  border: 2px solid darkgoldenrod;
+}
+.success {
+  background-color: rgba(143, 188, 143, 0.65);
+  border: 2px solid limegreen;
 }
 </style>

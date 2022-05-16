@@ -38,7 +38,7 @@ export default {
         localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
       } else {
-        this.$emit('errThrown', "Invalid Login")
+        this.$emit('infoPopup', ["error", "Invalid Login"])
       }
     }
   }
