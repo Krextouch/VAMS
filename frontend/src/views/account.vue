@@ -28,7 +28,7 @@ export default {
   methods: {
     async sendData() {
       const response = await axios.post("employee/api/v1/passwordReset", {
-        name: this.password
+        name: localStorage.getItem("username")
       }, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
@@ -39,11 +39,7 @@ export default {
       console.log(response)
     },
     submit() {
-      if (this.password !== "" && this.password === this.password_repeat) {
-        this.sendData()
-      } else {
-        alert("Passwörter stimmen nicht überein")
-      }
+      this.sendData()
     }
   }
 }

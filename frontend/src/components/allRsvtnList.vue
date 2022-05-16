@@ -55,8 +55,7 @@ export default {
   },
   methods: {
     updateReservation(rsvtnToUpdate) {
-      console.log("clicked reservation of id:", rsvtnToUpdate.id)
-      this.$emit('rsvtnClicked', rsvtnToUpdate);
+      this.$emit('rsvtnClicked', rsvtnToUpdate)
     },
     formatDate(_dateStr) {
       const date = new Date(_dateStr)
@@ -184,19 +183,19 @@ styles imported from:
   https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/
 */
 
-.list-wrapper::-webkit-scrollbar-track
+.card-wrapper::-webkit-scrollbar-track
 {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
   background-color: #F5F5F5;
 }
 
-.list-wrapper::-webkit-scrollbar
+.card-wrapper::-webkit-scrollbar
 {
   width: 10px;
   background-color: #F5F5F5;
 }
 
-.list-wrapper::-webkit-scrollbar-thumb
+.card-wrapper::-webkit-scrollbar-thumb
 {
   background-color: rgb(18, 18, 18);
   border: 2px solid dimgray;

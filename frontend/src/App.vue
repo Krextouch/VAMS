@@ -1,12 +1,33 @@
 <template>
 
-  <router-view/>
+  <router-view @errThrown="handleError($event)"/>
+  <errorMsg v-show="showErr" :errmsg="this.errMsg" />
 
 </template>
 
 <script>
+import errorMsg from "@/components/errorMsg";
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    errorMsg
+  },
+  data() {
+    return {
+      errMsg: null,
+      showErr: false
+    }
+  },
+  methods: {
+    handleError(err) {
+      this.errMsg = err
+      this.showErr = true
+      setTimeout(() => {
+        this.showErr = false
+      }, 2500)
+    }
+  }
 }
 </script>
 

@@ -14,8 +14,9 @@ import axios from 'axios'
 
 export default {
   name: 'LoginMask',
-  props: {
-  },
+  props: [
+
+  ],
   data() {
     return {
       username: '',
@@ -27,14 +28,17 @@ export default {
       const response = await axios.post('auth/api/v1/login', {
         username: this.username,
         password: this.password
-      });
-      if (response.status === 200) {
+      }).catch(err => {
+        console.log("login err", err)
+      })
+      if (response && response.status === 200) {
+        console.log("200er")
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('expires', response.data.expiration)
         localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
       } else {
-        alert("")
+        this.$emit('errThrown', "Invalid Login")
       }
     }
   }
