@@ -2,7 +2,7 @@
   <nav>
       <div class="nav-elmts-group" id="left">
         <ul>
-          <li><a href="./home">VAMS</a></li>
+          <li class="icon" id="logo"><img src="../assets/Logo.png" alt="VAMS Logo"></li>
           <li><router-link :to="{ name: 'Home' }">Reservierungen</router-link></li>
           <li><router-link :to="{ name: 'newReservation' }">Neue Reservierung</router-link></li>
           <li v-if="this.hasOfficeRights"><router-link :to="{ name: '' }">Neues Fahrzeug</router-link></li>
@@ -63,6 +63,15 @@ nav {
   background-color: rgba(60, 60, 60);
 }
 
+#logo {
+  padding: 0 3px;
+}
+
+#logo img {
+  height: 66px;
+  width: 66px;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -93,9 +102,8 @@ li a, li router-link {
   padding: 18px 26px;
 }
 
-li a:hover, li router-link:hover {
+li:hover {
   background-color: rgb(28, 28, 28);
   border-radius: 4px;
 }
-
 </style>
