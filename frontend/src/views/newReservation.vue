@@ -1,6 +1,4 @@
 <template>
-  <navBar />
-<!--  <h1> Erstelle neue Reservierung </h1>-->
   <div class="card-wrapper">
     <h2>Neue Reservierung erstellen</h2>
     <form @submit.prevent="sendNewRsvtn">
@@ -16,13 +14,11 @@
 </template>
 
 <script>
-import navBar from '../components/navBar.vue'
 import axios from "axios";
 
 export default {
   name: "newReservation",
   components: {
-    navBar
   },
   props: {
   },

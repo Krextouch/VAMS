@@ -7,15 +7,44 @@ import officePortal from "@/views/office";
 import account from "@/views/account";
 
 const routes = [
-        {path: '/login', name: 'Login', component: LoginMask},
-        {path: '/account', name: 'Account', component: account, meta: {requiresAuth: true}},
-        {path: '/home', name: 'Home', component: HomePage, meta: {requiresAuth: true}},
-        {path: '/home/office', name: 'Office', component: officePortal, meta: {requiresAuth: true}},
-        {path: '/newReservation', name: 'newReservation', component: newReservation, meta: {requiresAuth: true}},
+        {
+            path: '/login',
+            name: 'Login',
+            component: LoginMask
+        },
+        {
+            path: '/account',
+            name: 'Account',
+            omponent: account,
+            meta: {requiresAuth: true}
+        },
+        {
+            path: '/home',
+            name: 'Home',
+            component: HomePage,
+            meta: {requiresAuth: true}
+        },
+        {
+            path: '/home/office',
+            name: 'Office',
+            component: officePortal,
+            meta: {requiresAuth: true}
+        },
+        {
+            path: '/newReservation',
+            name: 'newReservation',
+            component: newReservation,
+            meta: {requiresAuth: true}
+        },
         // catchAll 404
-        {path: '/:catchAll(.*)', name: 'NotFound', component: NotFound},
+        {
+            path: '/:catchAll(.*)', name: 'NotFound', component: NotFound
+        },
         // redirect
-        {path: '/', redirect: '/home'},
+        {
+            path: '/',
+            redirect: '/home'
+        },
 ]
 
 const router = createRouter({

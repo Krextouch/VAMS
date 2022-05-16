@@ -1,5 +1,5 @@
 <template>
-  <navBar />
+<!--  <navBar />-->
   <div class="content-wrapper">
     <allRsvtnList @rsvtnClicked="updateRsvtn($event)"/>
     <updateRsvtn :rsvtnToUpdate="rsvtnToUpdate"/>
@@ -7,14 +7,12 @@
 </template>
 
 <script>
-import navBar from '../components/navBar.vue'
 import allRsvtnList from '../components/allRsvtnList.vue'
 import updateRsvtn from '../components/updateRsvtn.vue'
 
 export default {
   name: "HomePage",
   components: {
-    navBar,
     allRsvtnList,
     updateRsvtn
   },

@@ -1,6 +1,6 @@
 <template>
   <h2>404</h2>
-  <h3>Page {{ $route.fullPath }} not found</h3>
+  <h3>Page <span>{{ $route.fullPath }}</span> not found</h3>
 </template>
 
 <script>
@@ -10,5 +10,9 @@ export default {
 </script>
 
 <style scoped>
-
+h3 span {
+  color: #555555;
+  font-weight: normal;
+  text-decoration: underline;
+}
 </style>

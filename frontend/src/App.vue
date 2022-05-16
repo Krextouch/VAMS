@@ -1,5 +1,6 @@
 <template>
 
+  <navBar v-if="this.$route.fullPath !== '/login'" />
   <router-view @errThrown="handleError($event)"/>
   <errorMsg v-show="showErr" :errmsg="this.errMsg" />
 
@@ -7,11 +8,13 @@
 
 <script>
 import errorMsg from "@/components/errorMsg";
+import navBar from "@/components/navBar";
 
 export default {
   name: 'App',
   components: {
-    errorMsg
+    errorMsg,
+    navBar
   },
   data() {
     return {

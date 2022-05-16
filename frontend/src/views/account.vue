@@ -1,5 +1,4 @@
 <template>
-  <navBar />
   <div class="card-wrapper">
     <h2>Passwort ändern</h2>
     <form @submit.prevent="submit">
@@ -11,13 +10,11 @@
 </template>
 
 <script>
-import navBar from "@/components/navBar";
 import axios from "axios";
 
 export default {
   name: "accountSettings",
   components: {
-    navBar
   },
   data() {
     return {
