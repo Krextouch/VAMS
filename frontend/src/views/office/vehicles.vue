@@ -9,6 +9,7 @@ import updateVhcl from "@/components/office/vehicles/updateVhcl";
 
 export default {
   name: "allVehicles",
+  emits: ['infoPopup'],
   components: {
     updateVhcl
   },

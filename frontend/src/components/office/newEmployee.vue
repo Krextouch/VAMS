@@ -1,21 +1,26 @@
 <template>
   <div class="card-wrapper">
-    <h2>Neue Reservierung erstellen</h2>
-    <form @submit.prevent="sendNewRsvtn">
+    <h2>Neuen Mitarbeiter anlegen</h2>
+    <form @submit.prevent="newEmployee">
+      <div class="names">
+        <input type="text" id="firstname" name="firstname" v-model="firstname" required placeholder="Vorname" />
+        <input type="text" id="lastname" name="lastname" v-model="lastname" required placeholder="Nachname" />
+      </div>
+      <input type="email" id="email" name="email" v-model="email" required placeholder="Email" />
+      <input type="text" id="password" name="password" v-model="password" required placeholder="Passwort" />
+      <input type="text" id="nameTag" name="nameTag" v-model="nameTag" required placeholder="Kürzel" />
+      <div class="birthdata">
+        <input type="date" id="birthday" name="birthday" v-model="birthday" required />
+        <input type="text" id="birthplace" name="birthplace" v-model="birthplace" required placeholder="Geburtsort" />
+      </div>
+      <input type="text" id="workCard" name="workCard" v-model="workCard" required placeholder="WorkCard ID" />
       <div class="inp-wrapper">
-        <label for="start-time">Beginn</label>
-        <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit" />
+        <label for="hasLicense">Besitzt Führerschein</label>
+        <input type="checkbox" id="hasLicense" name="hasLicense" v-model="hasLicense" />
       </div>
       <div class="inp-wrapper">
-        <label for="end-time">Ende</label>
-        <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit" />
-      </div>
-      <div class="inp-wrapper">
-        <label for="vehicles">Verfügbare Fahrzeuge</label>
-        <select class="vehicles" id="vehicles">
-          <option id="default">-- Fahrzeug wählen --</option>
-          <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
-        </select>
+        <label for="hasOfficeRights">Ist Office Admin</label>
+        <input type="checkbox" id="hasOfficeRights" name="hasOfficeRights" v-model="hasOfficeRights" />
       </div>
       <button type="submit">Erstellen</button>
     </form>
@@ -23,21 +28,61 @@
 </template>
 
 <script>
+// import axios from "axios";
+
 export default {
   name: "newEmployee",
+  emits: ['infoPopup'],
   data() {
     return {
-      starttime: '',
-      endtime: '',
-      availableVehicles: []
+      firstname: "",
+      lastname: "",
+      email: "",
+      nameTag: "",
+      password: "",
+      birthday: "",
+      birthplace: "",
+      workCard: "",
+      hasLicense: false,
+      hasOfficeRights: false
     }
   },
+  methods: {
+    async newEmployee() {
+      const data = {
+        employeeId: null,
+        firstName: this.firstname,
+        lastName: this.lastname,
+        email: this.email,
+        nameTag: this.nameTag,
+        password: this.password,
+        workCard: this.workCard,
+        birthday: this.birthday,
+        birthplace: this.birthplace,
+        hasDrivingLicense: this.hasLicense,
+        hasOfficeRights: this.hasOfficeRights,
+      }
+      console.log("would send data: ", data)
+      // const response = await axios.post('office/api/v1/createEmployee', data, {
+      //   headers: {
+      //     "Authorization": "Bearer " + localStorage.token
+      //   }
+      // }).catch(err => {
+      //   this.$emit['infoPopup', {status: 'error', msg: 'Mitarbeiter konnte nicht angelegt werden'}]
+      //   console.log("createEmployee err: ", err)
+      // })
+      // if (response.status === 200) {
+      //   this.$emit['infoPopup', {status: 'success', msg: 'Mitarbeiter wurde angelegt'}]
+      //   this.$router.push({ name: 'officeHome' })
+      // }
+    }
+  }
 }
 </script>
 
 <style scoped>
 .card-wrapper {
-  width: 40vw;
+  width: 45vw;
   background: dimgray;
   padding: 0;
   margin: 5vh auto;
@@ -47,45 +92,54 @@ export default {
 }
 
 h2 {
-  margin: 20px 15%;
+  margin: 20px 12%;
   padding-bottom: 19px;
   border-bottom: 1px solid black;
 }
 
 form {
-  padding: 5vh 1vw;
+  padding: 2vh 1vw;
 }
 
 .inp-wrapper {
   color: black;
   font-weight: bold;
-  padding: 0 50px;
+  padding: 0 10px;
 }
 
-label {
-  margin: 5px 0;
-}
-
-input, select {
-  margin: 1% 10% 5% 10%;
+input:not([type="checkbox"]) {
+  width: calc(80% - 24px);
+  min-width: 176px;
+  margin: 5px auto 15px auto;
   padding: 10px;
   font-size: medium;
   border-radius: 30px;
 }
 
-select {
-  width: 80%;
-  min-width: 200px;
+input[type="checkbox"] {
+  height: 15px;
+  width: 15px;
+  padding: 3px;
+  margin: 8px;
 }
 
-input {
-  width: calc(80% - 24px);
-  min-width: 176px;
+.names input {
+  width: calc(40% - 24px);
+}
+
+.birthdata #birthday {
+  width: 15%;
+  min-width: 133px
+}
+
+.birthdata #birthplace {
+  width: 48%;
 }
 
 button {
   display: inline-block;
   padding: 12px 25px;
+  margin-top: 20px;
   font-size: 24px;
   cursor: pointer;
   text-align: center;

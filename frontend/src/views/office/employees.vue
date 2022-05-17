@@ -11,6 +11,7 @@ import updateEmp from "@/components/office/employees/updateEmp";
 
 export default {
   name: "allEmployees",
+  emits: ['infoPopup'],
   components: {
     allEmpList,
     updateEmp

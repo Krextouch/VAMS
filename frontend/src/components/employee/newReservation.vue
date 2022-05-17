@@ -4,17 +4,17 @@
     <form @submit.prevent="sendNewRsvtn">
       <div class="inp-wrapper">
         <label for="start-time">Beginn</label>
-        <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit" />
+        <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required />
       </div>
       <div class="inp-wrapper">
         <label for="end-time">Ende</label>
-        <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit" />
+        <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required />
       </div>
       <div class="inp-wrapper">
         <label for="vehicles">Verfügbare Fahrzeuge</label>
-        <select class="vehicles" id="vehicles">
-          <option id="default">-- Fahrzeug wählen --</option>
-          <option v-for="vcl in availableVehicles" :key="vcl.vin">{{ vcl }}</option>
+        <select class="vehicles" id="vehicles" v-model="vhcl_select">
+          <option id="default" disabled value="">-- Fahrzeug wählen --</option>
+          <option v-for="vcl in availableVehicles" :key="JSON.stringify(vcl)">{{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }}</option>
         </select>
       </div>
       <button type="submit">Erstellen</button>
@@ -27,16 +27,21 @@ import axios from "axios";
 
 export default {
   name: "newReservation",
+  emits: ['infoPopup'],
   components: {
   },
   created() {
+    const initDate = new Date()
+    this.starttime = this.formatForDatetimeLocal(initDate)
+    this.endtime = this.formatForDatetimeLocal(this.addDays(1, initDate))
+
     // axios.post('employee/api/v1/getAvailableVehicle', null, {
     //   headers: {
     //     'Authorization': "Bearer " + localStorage.token
     //   },
     //   params: {
-    //     start: null,
-    //     end: null
+    //     "startTime": this.starttime,
+    //     "endTime": this.endtime
     //   }
     // }).then(
     //     res => {
@@ -48,25 +53,36 @@ export default {
   },
   data() {
     return {
-      starttime: '',
-      endtime: '',
+      starttime: "",
+      endtime: "",
+      vhcl_select: "",
       availableVehicles: []
     }
   },
   methods: {
+    formatForDatetimeLocal(date) {
+      const datestring = date.getFullYear()+"-"+`${(date.getMonth()+1)<10?'0':''}`+(date.getMonth()+1)+"-"+date.getDate()+"T"+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
+      return datestring
+    },
+    addDays(numberOfDays, _date = new Date()) {
+      _date.setTime(_date.getTime() + numberOfDays * 24 * 60 * 60 * 1000)
+      return new Date(_date)
+    },
     async sendNewRsvtn() {
-      const response = await axios.post('employee/api/v1/createReservation', {
-          start_time_of_reservation: null,
-          end_time_of_reservation: null,
-          vin: null
-        }, {
+      const data = {
+        "id": NaN,
+        "startTimeOfReservation": this.starttime,
+        "endTimeOfReservation": this.endtime,
+        "isVerified": false,
+        "vehicle": this.vhcl_select
+      }
+      await axios.post('employee/api/v1/createReservation', data, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }
       }).catch(err => {
           console.log("create err: ", err)
-      });
-      if (response) console.log("create response: ", response)
+      })
       // this.$router.push({ name: 'Home'})
     }
   }

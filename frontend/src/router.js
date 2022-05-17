@@ -5,6 +5,7 @@ import office from "@/views/office/office";
 import officeHome from "@/views/office/officeHome";
 import vehicles from "@/views/office/vehicles";
 import employees from "@/views/office/employees";
+import newEmployee from "@/components/office/newEmployee";
 import HomePage from "@/views/home.vue";
 import newReservation from "@/components/employee/newReservation";
 import NotFound from "@/views/NotFound.vue";
@@ -42,6 +43,11 @@ const routes = [
                     path: 'employees',
                     name: 'allEmployees',
                     component: employees
+                },
+                {
+                    path: 'newEemployee',
+                    name: 'newEmployee',
+                    component: newEmployee
                 }
             ]
         },

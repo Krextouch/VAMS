@@ -14,9 +14,7 @@ import axios from 'axios'
 
 export default {
   name: 'LoginMask',
-  props: [
-
-  ],
+  emits: ['infoPopup'],
   data() {
     return {
       username: '',
@@ -30,16 +28,17 @@ export default {
         password: this.password
       }).catch(err => {
         console.log(err)
-        this.$emit('infoPopup', ["error", "Login error"])
+        this.$emit('infoPopup', {status: "error", msg: "Login error"})
       })
       if (response && response.status === 200) {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('expires', response.data.expiration)
-        localStorage.setItem('employeeId', response.data.employeeId)
+        // localStorage.setItem('employeeId', response.data.employeeId)
         localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
+        this.$emit('infoPopup', {status: 'success', msg: 'Login complete'})
       } else {
-        this.$emit('infoPopup', ["error", "Invalid Login"])
+        this.$emit('infoPopup', {status: "error", msg: "Invalid Login"})
       }
     }
   }

@@ -8,6 +8,7 @@ import officeNav from "@/components/office/officeNav";
 
 export default {
   name: "officeView",
+  emits: ['infoPopup'],
   components: {
     officeNav
   }

@@ -1,15 +1,13 @@
 <template>
-  <div class="info-wrapper" :class="info[0]">
-    <span>{{ info[1] }}</span>
+  <div class="info-wrapper" :class="info.status">
+    <span>{{ info.msg }}</span>
   </div>
 </template>
 
 <script>
 export default {
   name: "errorMsg",
-  props: [
-    'info'
-  ]
+  props: ['info']
 }
 </script>
 

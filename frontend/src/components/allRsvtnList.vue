@@ -17,40 +17,39 @@
         </div>
       </li>
     </ul>
-    <div class="info" id="empty-list" v-if="allReservationList.length == 0">
+    <div class="info" id="empty-list" v-if="allReservationList.length === 0">
       <span>Zurzeit keine Reservierungen verfügbar</span>
     </div>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   name: "allRsvtnList",
-  props: [
-      'showAllEmployees'
-  ],
+  emits: ['rsvtnClicked', 'infoPopup'],
+  props: ['showAllEmployees'],
   created() {
-    // let data = {
-    //   "startTimeFrame": null,
-    //   "endTimeFrame": null,
-    //   "isVerified": null,
-    //   "vehicleVin": null,
-    //   "employeeId": this.showAllEmployees === 'true' ? null : parseInt(localStorage.getItem('employeeId')),
-    //   "showAllEmployees": this.showAllEmployees === 'true'
-    // }
-    // axios.post('employee/api/v1/allReservations', data, {
-    //   headers: {
-    //     "Authorization": "Bearer " + localStorage.token
-    //   }
-    //   }).then(
-    //     res => {
-    //       this.handleResponseData(res.data)
-    //     }).catch(
-    //     err => {
-    //       console.log("err: ", err)
-    // })
+    const data = {
+      "startTimeFrame": null,
+      "endTimeFrame": null,
+      "isVerified": null,
+      "vehicleVin": null,
+      "employeeId": this.showAllEmployees === 'true' ? null : 1,//parseInt(localStorage.getItem('employeeId')),
+      "showAllEmployees": this.showAllEmployees === 'true'
+    }
+    console.log("sending data: ", data)
+    axios.post('employee/api/v1/allReservations', data, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.token
+      }
+      }).then(res => {
+      console.log("response: ", res)
+          this.handleResponseData(res.data)
+        }).catch(err => {
+          console.log("err: ", err)
+    })
   },
   data() {
     return {
@@ -63,7 +62,7 @@ export default {
     },
     formatDate(_dateStr) {
       const date = new Date(_dateStr)
-      return date.getDay() + "." + date.getMonth() + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
+      return date.getDate()+"."+`${date.getMonth()+1}`+"."+date.getFullYear()+" - "+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
     },
     handleResponseData(data) {
       let resList = data.reservationParamList

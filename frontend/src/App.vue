@@ -2,7 +2,7 @@
 
   <navBar v-if="this.$route.fullPath !== '/login' && this.$route.fullPath.includes('/office') <= 0" />
   <router-view @infoPopup="handleInfo($event)"/>
-  <errorMsg v-if="this.infoMsg[1] !== ''" v-show="showInfo" :info="this.infoMsg" />
+  <errorMsg v-if="this.infoMsg.msg !== ''" v-show="showInfo" :info="this.infoMsg" />
 
 </template>
 
@@ -18,13 +18,14 @@ export default {
   },
   data() {
     return {
-      infoMsg: ["", ""],
+      infoMsg: {status: "", msg: ""},
       showInfo: false
     }
   },
   methods: {
-    handleInfo(err) {
-      this.infoMsg = err
+    handleInfo(_info) {
+      console.log(_info)
+      this.infoMsg = _info
       this.showInfo = true
       setTimeout(() => {
         this.showInfo = false

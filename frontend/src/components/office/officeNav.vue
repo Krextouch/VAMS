@@ -3,7 +3,7 @@
     <div class="nav-elmts-group" id="left">
       <ul>
         <li class="icon" id="logo"><img src="@/assets/Logo.png" alt="VAMS Logo"></li>
-        <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'Office' }">Reservierungen</router-link></li>
+        <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'Office' }">Alle Reservierungen</router-link></li>
         <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'allVehicles' }">Fahrzeuge</router-link></li>
         <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'allEmployees' }">Mitarbeiter</router-link></li>
       </ul>
@@ -11,7 +11,6 @@
     <div class="nav-elmts-group" id="right">
       <ul>
         <li v-if="this.hasOfficeRights === 'true'"><router-link :to="{ name: 'Home' }">zum User Portal</router-link></li>
-        <li class="icon" id="account"><router-link :to="{ name: 'Account' }"><img src="@/assets/account.png" alt="Account settings"></router-link></li>
         <li class="icon" id="logout"><a v-on:click="logout()"><img src="@/assets/logout_white.png" alt="Log Out"></a></li>
       </ul>
     </div>
@@ -38,7 +37,7 @@ export default {
           "Authorization": "Bearer " + localStorage.token
         }
       })
-      if (response.status == '200') {
+      if (response.status === 200) {
         localStorage.clear()
         sessionStorage.clear()
         this.$router.push('/login')
@@ -60,7 +59,7 @@ nav {
   padding-top: 25px;
   display: flex;
   justify-content: space-between;
-  background-color: rgb(65, 29, 29);
+  background-color: rgb(100, 32, 32);
 }
 
 #logo {

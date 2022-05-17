@@ -11,6 +11,7 @@ import updateRsvtn from '@/components/updateRsvtn.vue'
 
 export default {
   name: "officeHome",
+  emits: ['infoPopup'],
   components: {
     allRsvtnList,
     updateRsvtn
@@ -35,7 +36,4 @@ export default {
   justify-content: space-between;
 }
 
-nav-bar {
-  background-color: red;
-}
 </style>

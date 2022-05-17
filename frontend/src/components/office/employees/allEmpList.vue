@@ -1,45 +1,71 @@
 <template>
   <div class="card-wrapper">
-    <ul>
-      <li class="emp-wrapper" v-for="emp in allEmployeesList" :key="emp.id" v-on:click="updateEmployee(emp)">
-        <div class="param-wrapper">
-          <span class="emp-param">{{  }}</span>
-          <span class="emp-param">{{  }}</span>
-        </div>
-      </li>
-    </ul>
-    <div class="info" id="empty-list" v-if="allEmployeesList.length == 0">
+    <table>
+        <tr class="table-head">
+          <th>Vorname</th>
+          <th>Nachname</th>
+          <th>Kürzel</th>
+          <th>Führerschein</th>
+          <th>Admin</th>
+          <th>Anzahl Reservierungen</th>
+        </tr>
+        <tr class="emp-wrapper" v-for="emp in allEmployeesList" :key="emp.id" :ref="'ref-'+emp.id" v-on:click="updateEmployee(emp)">
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.firstname }}</span>
+          </td>
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.lastname }}</span>
+          </td>
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.nameTag }}</span>
+          </td>
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.hasDrivingLicense ? 'Ja' : 'Nein' }}</span>
+          </td>
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.hasOfficeRights ? 'Ja' : 'Nein' }}</span>
+          </td>
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.reservation.length }}</span>
+          </td>
+        </tr>
+    </table>
+    <div class="btn-wrapper">
+      <router-link :to="{ name: 'newEmployee' }">Mitarbeiter anlegen</router-link>
+    </div>
+    <div class="info" id="empty-list" v-if="allEmployeesList.length === 0">
       <span>Keine Mitarbeiter verfügbar</span>
     </div>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   name: "allRsvtnList",
+  emits: ['infoPopup', 'empClicked'],
   props: [
       'showAllEmployees'
   ],
   created() {
-    // let data = {
-    //   firstName: null
-    //   lastName: null
-    //   email: null
-    //   nameTag: null
-    // }
-    // axios.post('office/api/v1/allEmployees', data, {
-    //   headers: {
-    //     "Authorization": "Bearer " + localStorage.token
-    //   }
-    //   }).then(
-    //     res => {
-    //       this.handleResponseData(res.data)
-    //     }).catch(
-    //     err => {
-    //       console.log("err: ", err)
-    // })
+    let data = {
+      firstName: null,
+      lastName: null,
+      email: null,
+      nameTag: null
+    }
+    axios.post('office/api/v1/allEmployee', data, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.token
+      }
+      }).then(
+        res => {
+          this.handleResponseData(res.data)
+        }).catch(
+        err => {
+          console.log("err: ", err)
+    })
   },
   data() {
     return {
@@ -48,13 +74,29 @@ export default {
   },
   methods: {
     updateEmployee(empToUpdate) {
+      const item = document.getElementsByClassName('active')
+      if (item.length > 0) {
+        item[0].classList.remove('active')
+      }
+      this.$refs['ref-'+empToUpdate.id][0].classList.add('active')
       this.$emit('empClicked', empToUpdate)
     },
     handleResponseData(data) {
       let resList = data.employeeList
       resList.forEach(emp => {
         let tempEmpObj = {
-          id: emp.id,
+          id: emp.employeeId,
+          firstname: emp.firstName,
+          lastname: emp.lastName,
+          email: emp.email,
+          nameTag: emp.nameTag,
+          password: emp.password,
+          workCard: emp.workCard,
+          birthday: emp.birthday,
+          birthplace: emp.birthplace,
+          hasDrivingLicense: emp.hasDrivingLicense,
+          hasOfficeRights: emp.hasOfficeRights,
+          reservation: emp.reservation
         }
         this.allEmployeesList.push(tempEmpObj)
       })
@@ -65,45 +107,39 @@ export default {
 
 <style scoped>
 .card-wrapper {
-  width: 40vw;
+  position: relative;
+  width: 45vw;
   height: calc(94vh - 96px - 2px);
   background: dimgray;
   padding: 0;
-  margin: 3vh 5vw;
+  margin: 3vh 1vw 3vw 3vw;
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;
-  overflow-y: scroll;
+  overflow: auto;
 }
 
-ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-head {
+  background-color: rgba(105, 105, 105);
+  color: whitesmoke;
+  position: sticky;
+  top: 0;
+}
+
+.table-head th {
+  padding: 8px 0 5px 0;
 }
 
 .emp-wrapper {
   width: calc(100% - 50px - 1px);
-  padding: 20px 25px;
-  margin: 2px 1px;
   background-color: #ababab;
-  border-radius: 2px;
   cursor: pointer;
   user-select: none;
-}
-
-.emp-wrapper:first-of-type {
-  margin-top: 1px;
-}
-
-.emp-wrapper:last-of-type {
-  margin-bottom: 1px;
-}
-
-.param-wrapper img {
-  height: 18px;
-  width: 18px;
-  padding: 2px;
 }
 
 .emp-wrapper:hover {
@@ -111,13 +147,48 @@ ul {
 }
 
 .param-wrapper {
-  display: flex;
-  justify-content: space-between;
+  padding: 15px 5px;
+  border-bottom: 1px solid black;
+}
+
+.emp-wrapper:first-of-type .param-wrapper {
+  border-top: 1px solid black;
+}
+
+.active {
+  font-weight: bold;
+  background-color: #aaaaaa;
 }
 
 .info {
   color: lightgray;
   font-weight: bold;
+}
+
+.btn-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 20px;
+  padding: 12px 25px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  background-color: cornflowerblue;
+  font-size: 22px;
+}
+
+.btn-wrapper:hover {
+  background-color: #3c5a8f;
+}
+
+.btn-wrapper a {
+  color: #fff;
+  text-decoration: none;
 }
 
 #empty-list {

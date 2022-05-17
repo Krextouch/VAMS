@@ -3,7 +3,7 @@
       <div class="nav-elmts-group" id="left">
         <ul>
           <li class="icon" id="logo"><img src="../assets/Logo.png" alt="VAMS Logo"></li>
-          <li><router-link :to="{ name: 'Home' }">Reservierungen</router-link></li>
+          <li><router-link :to="{ name: 'Home' }">Meine Reservierungen</router-link></li>
           <li><router-link :to="{ name: 'newReservation' }">Neue Reservierung</router-link></li>
         </ul>
       </div>
@@ -36,7 +36,7 @@ export default {
           "Authorization": "Bearer " + localStorage.token
         }
       })
-      if (response.status == '200') {
+      if (response.status === 200) {
         localStorage.clear()
         sessionStorage.clear()
         this.$router.push('/login')
