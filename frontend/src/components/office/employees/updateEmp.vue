@@ -40,8 +40,6 @@ export default {
       this.email = this.empToUpdate.email
       this.nameTag = this.empToUpdate.nameTag
       this.birthday = this.empToUpdate.birthday
-      console.log("birthday", this.birthday)
-      console.log("birthday type", typeof this.birthday)
       this.birthplace = this.empToUpdate.birthplace
       this.hasLicense = this.empToUpdate.hasDrivingLicense
       this.hasOfficeRights = this.empToUpdate.hasOfficeRights

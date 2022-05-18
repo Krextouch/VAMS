@@ -35,6 +35,9 @@ export default {
     this.starttime = this.formatForDatetimeLocal(initDate)
     this.endtime = this.formatForDatetimeLocal(this.addDays(1, initDate))
 
+    console.log("starttime: ", this.starttime ,typeof this.starttime)
+    console.log("endtime: ", this.endtime ,typeof this.endtime)
+
     axios.post('employee/api/v1/getAvailableVehicle', {
       "startTime": this.starttime,
       "endTime": this.endtime
@@ -43,10 +46,17 @@ export default {
         'Authorization': "Bearer " + localStorage.token
       }
     }).then(
-        res => {
-          console.log("getVehicle response", res)
-          // this.availableVehicles = res.data
-        }).catch(err => {
+        response => {
+          console.log("getVehicle response", response)
+          if (response.status === 200) {
+            this.availableVehicles = response.data
+            if (this.availableVehicles === []) {
+              this.$emit('infoPopup', ['info', "Keine Fahrzeuge verfügbar"])
+            }
+          }
+        }
+    ).catch(err => {
+        this.$emit('infoPopup', ['error', "Fahrzeug-Request fehlgeschlagen"])
       console.log("getVehicle err: ", err)
     })
   },
@@ -75,7 +85,7 @@ export default {
         "isVerified": false,
         "vehicle": this.vhcl_select
       }
-      await axios.post('employee/api/v1/createReservation', data, {
+      axios.post('employee/api/v1/createReservation', data, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }
