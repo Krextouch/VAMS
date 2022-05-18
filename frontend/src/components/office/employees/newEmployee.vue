@@ -33,8 +33,31 @@ import axios from "axios";
 export default {
   name: "newEmployee",
   emits: ['infoPopup'],
+  created() {
+    let data = {
+      firstName: null,
+      lastName: null,
+      email: null,
+      nameTag: null
+    }
+    axios.post('office/api/v1/allEmployee', data, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.token
+      }
+    }).then(
+        res => {
+          res.data.employeeList.forEach(emp => {
+            if (emp.employeeId > this.nextID) this.nextID = emp.employeeId
+          })
+          this.nextID++
+        }).catch(
+        err => {
+          console.log("get allEmployee err: ", err)
+        })
+  },
   data() {
     return {
+      nextID: 0,
       firstname: "",
       lastname: "",
       email: "",
@@ -50,7 +73,7 @@ export default {
   methods: {
     async newEmployee() {
       const data = {
-        employeeId: null,
+        employeeId: this.nextID,
         firstName: this.firstname,
         lastName: this.lastname,
         email: this.email,
@@ -63,7 +86,7 @@ export default {
         hasOfficeRights: this.hasOfficeRights,
       }
       console.log("sending data: ", data)
-      const response = await axios.post('office/api/v1/createEmployee', data, {
+      const response = await axios.post("/office/api/v1/createEmployee", data, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }

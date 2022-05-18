@@ -52,4 +52,29 @@ body {
   margin: 0;
   padding: 0;
 }
+
+/* --- Scrollbar ---
+styles imported from:
+  https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/
+*/
+
+::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+  width: 10px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: rgb(18, 18, 18);
+  border: 2px solid dimgray;
+}
+/* --- Scrollbar ---
+*/
 </style>

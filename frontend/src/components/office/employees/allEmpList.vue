@@ -2,14 +2,18 @@
   <div class="card-wrapper">
     <table>
         <tr class="table-head">
+          <th>ID</th>
           <th>Vorname</th>
           <th>Nachname</th>
           <th>Kürzel</th>
           <th>Führerschein</th>
           <th>Admin</th>
-          <th>Anzahl Reservierungen</th>
+          <th>Reservierungen</th>
         </tr>
-        <tr class="emp-wrapper" v-for="emp in allEmployeesList" :key="emp.id" :ref="'ref-'+emp.id" v-on:click="updateEmployee(emp)">
+        <tr class="emp-wrapper" v-for="emp in allEmployeesList" :key="emp.employeeId" :ref="'ref-'+emp.employeeId" @click="updateEmployee(emp)">
+          <td class="param-wrapper">
+            <span class="emp-param">{{ emp.employeeId }}</span>
+          </td>
           <td class="param-wrapper">
             <span class="emp-param">{{ emp.firstname }}</span>
           </td>
@@ -78,14 +82,14 @@ export default {
       if (item.length > 0) {
         item[0].classList.remove('active')
       }
-      this.$refs['ref-'+empToUpdate.id][0].classList.add('active')
+      this.$refs['ref-'+empToUpdate.employeeId][0].classList.add('active')
       this.$emit('empClicked', empToUpdate)
     },
     handleResponseData(data) {
       let resList = data.employeeList
       resList.forEach(emp => {
         let tempEmpObj = {
-          id: emp.employeeId,
+          employeeId: emp.employeeId,
           firstname: emp.firstName,
           lastname: emp.lastName,
           email: emp.email,
