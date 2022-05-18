@@ -28,7 +28,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 
 export default {
   name: "newEmployee",
@@ -62,19 +62,20 @@ export default {
         hasDrivingLicense: this.hasLicense,
         hasOfficeRights: this.hasOfficeRights,
       }
-      console.log("would send data: ", data)
-      // const response = await axios.post('office/api/v1/createEmployee', data, {
-      //   headers: {
-      //     "Authorization": "Bearer " + localStorage.token
-      //   }
-      // }).catch(err => {
-      //   this.$emit['infoPopup', {status: 'error', msg: 'Mitarbeiter konnte nicht angelegt werden'}]
-      //   console.log("createEmployee err: ", err)
-      // })
-      // if (response.status === 200) {
-      //   this.$emit['infoPopup', {status: 'success', msg: 'Mitarbeiter wurde angelegt'}]
-      //   this.$router.push({ name: 'officeHome' })
-      // }
+      console.log("sending data: ", data)
+      const response = await axios.post('office/api/v1/createEmployee', data, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+      }).catch(err => {
+        this.$emit('infoPopup', {status: 'error', msg: 'Mitarbeiter konnte nicht angelegt werden'})
+        console.log("createEmployee err: ", err)
+      })
+        console.log(response)
+      if (response && response.status === 200) {
+        this.$router.push({ name: 'OfficeHome' })
+        this.$emit('infoPopup', {status: 'success', msg: 'Mitarbeiter wurde angelegt'})
+      }
     }
   }
 }

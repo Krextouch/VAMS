@@ -5,7 +5,7 @@ import office from "@/views/office/office";
 import officeHome from "@/views/office/officeHome";
 import vehicles from "@/views/office/vehicles";
 import employees from "@/views/office/employees";
-import newEmployee from "@/components/office/newEmployee";
+import newEmployee from "@/components/office/employees/newEmployee";
 import HomePage from "@/views/home.vue";
 import newReservation from "@/components/employee/newReservation";
 import NotFound from "@/views/NotFound.vue";

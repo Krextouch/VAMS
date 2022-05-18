@@ -35,21 +35,20 @@ export default {
     this.starttime = this.formatForDatetimeLocal(initDate)
     this.endtime = this.formatForDatetimeLocal(this.addDays(1, initDate))
 
-    // axios.post('employee/api/v1/getAvailableVehicle', null, {
-    //   headers: {
-    //     'Authorization': "Bearer " + localStorage.token
-    //   },
-    //   params: {
-    //     "startTime": this.starttime,
-    //     "endTime": this.endtime
-    //   }
-    // }).then(
-    //     res => {
-    //       console.log("getVehicle response", res)
-    //       // this.availableVehicles = res.data
-    //     }).catch(err => {
-    //   console.log("getVehicle err: ", err)
-    // })
+    axios.post('employee/api/v1/getAvailableVehicle', {
+      "startTime": this.starttime,
+      "endTime": this.endtime
+    }, {
+      headers: {
+        'Authorization': "Bearer " + localStorage.token
+      }
+    }).then(
+        res => {
+          console.log("getVehicle response", res)
+          // this.availableVehicles = res.data
+        }).catch(err => {
+      console.log("getVehicle err: ", err)
+    })
   },
   data() {
     return {
