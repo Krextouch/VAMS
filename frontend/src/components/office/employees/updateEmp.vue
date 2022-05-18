@@ -79,7 +79,7 @@ export default {
         lastName: this.lastname,
         email: this.email,
         nameTag: this.nameTag,
-        password: this.password,
+        password: this.empToUpdate.password,
         workCard: this.workCard,
         birthday: this.birthday,
         birthplace: this.birthplace,
@@ -96,6 +96,10 @@ export default {
         this.$emit('infoPopup', {status: "error", msg: "Mitarbeiterdaten konnten nicht aktualisiert werden"})
       })
       console.log("updateEmp response: ", response)
+      if (response && response.status === 200) {
+        window.location.reload()
+        this.$emit('infoPopup', {status: "success", msg: "Änderungen gespeichert"})
+      }
     },
     async deleteEmp() {
       const response = await axios.delete(`office/api/v1/deleteEmployee/${this.empToUpdate.employeeId}`, {
@@ -107,9 +111,7 @@ export default {
         this.$router.push({name: "allEmployees"})
         this.$emit('infoPopup', {status: "error", msg: "Mitarbeiter konnte nicht gelöscht werden"})
       })
-      console.log("deleteEmp response: ", response)
       if (response && response.status === 200) {
-        console.log("200")
         window.location.reload()
         this.$emit('infoPopup', {status: "success", msg: "Mitarbeiter gelöscht"})
       }

@@ -10,6 +10,7 @@
         </select>
         <button type="submit">Abschicken</button>
       </form>
+      <button id="verify" v-if="!rsvtnToUpdate.isVerified" @click="verifyRsvtn">Verifizieren</button>
       <button id="delete" @click="deleteRsvtn">Stornieren</button>
     </div>
     <div class="info" id="none-selected" v-if="!rsvtnToUpdate">
@@ -24,8 +25,12 @@ import axios from "axios";
 export default {
   name: "updateRsvtn",
   props: ['rsvtnToUpdate'],
-  updated() {
-    console.log("received rsvtn: ", this.rsvtnToUpdate)
+  watch: {
+    rsvtnToUpdate: function() {
+      if (this.rsvtnToUpdate) {
+        this.initForm()
+      }
+    }
   },
   data(){
     return {
@@ -36,8 +41,11 @@ export default {
     }
   },
   methods: {
+    initForm() {
+      this.starttime = this.rsvtnToUpdate.startTimeString
+      this.endtime = this.rsvtnToUpdate.endTimeString
+    },
     async updateRsvtn() {
-      console.log("update rsvtn of id: ", this.rsvtnToUpdate.id)
       const data = {
         "id": this.rsvtnToUpdate.id,
         "startTimeFrame": this.starttime,
@@ -53,8 +61,15 @@ export default {
       })
       this.$router.push({ name: this.$router.currentRoute})
     },
+    async verifyRsvtn() {
+      await axios.put(`employee/api/v1/verifyReservation/${this.rsvtnToUpdate.id}`, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+      })
+      this.$router.push({ name: this.$router.currentRoute})
+    },
     async deleteRsvtn() {
-      console.log("delete rsvtn of id: ", this.rsvtnToUpdate.id)
       await axios.delete(`employee/api/v1/deleteReservation/${this.rsvtnToUpdate.id}`, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
@@ -134,5 +149,11 @@ button:active {
 
 button#delete {
   background-color: orangered;
+  margin: 0 1%;
+}
+
+button#verify {
+  background-color: darkseagreen;
+  margin: 0 1%;
 }
 </style>

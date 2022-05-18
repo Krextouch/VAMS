@@ -34,10 +34,6 @@ export default {
     const initDate = new Date()
     this.starttime = this.formatForDatetimeLocal(initDate)
     this.endtime = this.formatForDatetimeLocal(this.addDays(1, initDate))
-
-    console.log("starttime: ", this.starttime ,typeof this.starttime)
-    console.log("endtime: ", this.endtime ,typeof this.endtime)
-
     axios.post('employee/api/v1/getAvailableVehicle', {
       "startTime": this.starttime,
       "endTime": this.endtime
@@ -71,6 +67,7 @@ export default {
   methods: {
     formatForDatetimeLocal(date) {
       const datestring = date.getFullYear()+"-"+`${(date.getMonth()+1)<10?'0':''}`+(date.getMonth()+1)+"-"+date.getDate()+"T"+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
+      console.log(datestring)
       return datestring
     },
     addDays(numberOfDays, _date = new Date()) {

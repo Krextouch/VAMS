@@ -33,10 +33,13 @@ export default {
       if (response && response.status === 200) {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('expires', response.data.expiration)
+        localStorage.setItem('firstName', response.data.firstName)
+        localStorage.setItem('lastName', response.data.lastName)
+        localStorage.setItem('fullName', response.data.firstName+" "+response.data.lastName)
         // localStorage.setItem('employeeId', response.data.employeeId)
         localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
-        // this.$emit('infoPopup', {status: 'success', msg: 'Login complete'})
+        this.$emit('infoPopup', {status: 'success', msg: 'Eingeloggt als '+localStorage.fullName})
       } else {
         this.$emit('infoPopup', {status: "error", msg: "Invalid Login"})
       }
