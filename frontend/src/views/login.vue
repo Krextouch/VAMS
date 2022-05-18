@@ -36,7 +36,7 @@ export default {
         // localStorage.setItem('employeeId', response.data.employeeId)
         localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
-        this.$emit('infoPopup', {status: 'success', msg: 'Login complete'})
+        // this.$emit('infoPopup', {status: 'success', msg: 'Login complete'})
       } else {
         this.$emit('infoPopup', {status: "error", msg: "Invalid Login"})
       }
