@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface ReservationRepository extends CrudRepository<Reservation, Integer> {
     Optional<Reservation> findById(int id);
 
+    Optional<List<Reservation>> findAllByVehicle_Vin(String vin);
+
     Optional<List<Reservation>> findAllByEmployee(Employee employee);
 
     Optional<List<Reservation>> findByIsVerifiedFalse();

@@ -8,7 +8,6 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class EmployeeService {
@@ -41,6 +39,22 @@ public class EmployeeService {
 
     public void createReservation(Reservation reservation, String authorization) {
         if (!(reservationRepository.existsById(reservation.getId()))) {
+
+            if(reservation.getStartTimeOfReservation().isAfter(reservation.getEndTimeOfReservation())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Starttime of the reservation must be bevor the endtime");
+            }
+
+            for (Reservation tmpReservation : reservationRepository.findAllByVehicle_Vin(reservation.getVehicle().getVin()).get()) {
+                if ((tmpReservation.getEndTimeOfReservation().isAfter(reservation.getStartTimeOfReservation())
+                        && tmpReservation.getStartTimeOfReservation().isBefore(reservation.getStartTimeOfReservation()))
+                        || (tmpReservation.getEndTimeOfReservation().isAfter(reservation.getEndTimeOfReservation())
+                        && tmpReservation.getStartTimeOfReservation().isBefore(reservation.getEndTimeOfReservation()))
+                        || (tmpReservation.getEndTimeOfReservation().isBefore(reservation.getEndTimeOfReservation())
+                        && tmpReservation.getStartTimeOfReservation().isAfter(reservation.getStartTimeOfReservation()))) {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation request interferes with a diffrent reservation");
+                }
+            }
+
             Employee employee = getEmployeeFromToken(authorization);
             Reservation newReservation = Reservation.builder()
                     .startTimeOfReservation(reservation.getStartTimeOfReservation())
