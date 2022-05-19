@@ -2,8 +2,8 @@
   <div class="LoginMaskWrapper">
     <h1>VAMS</h1>
     <form @submit.prevent="handleSubmit">
-      <input type="text" id="username" name="username" autocomplete="username" v-model="username" required placeholder="Username" />
-      <input type="password" id="password" name="password" autocomplete="current-password" v-model="password" required placeholder="Password" />
+      <input type="text" id="username" name="username" autocomplete="username" v-model="username" required placeholder="Email | Kürzel" />
+      <input type="password" id="password" name="password" autocomplete="current-password" v-model="password" required placeholder="Passwort" />
       <button type="submit">Login</button>
     </form>
   </div>
