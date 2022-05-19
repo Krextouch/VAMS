@@ -107,6 +107,7 @@ public class EmployeeService {
 
             if (vehicleAvailable) {
                 AvailableVehicleParam availableVehicleParam = AvailableVehicleParam.builder()
+                        .vin(vehicle.getVin())
                         .brand(vehicle.getBrand())
                         .color(vehicle.getColor())
                         .model(vehicle.getModel())

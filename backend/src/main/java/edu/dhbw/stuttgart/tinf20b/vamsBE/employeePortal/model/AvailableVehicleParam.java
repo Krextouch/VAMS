@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AvailableVehicleParam {
 
+    private String vin;
     private String brand;
     private String model;
     private int ps;
