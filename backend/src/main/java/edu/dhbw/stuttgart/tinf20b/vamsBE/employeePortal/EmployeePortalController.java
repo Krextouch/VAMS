@@ -2,6 +2,7 @@ package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -19,8 +20,9 @@ public interface EmployeePortalController {
     @DeleteMapping("/deleteReservation/{reservationId}")
     void deleteReservation(@PathVariable("reservationId") int reservationId, @RequestHeader("Authorization") String authorization);
 
-    @PostMapping("/getAvailableVehicle")
-    AvailableVehicleResponse getAvailableVehicle(@RequestParam("start") LocalDateTime startTime, @RequestParam("end") LocalDateTime endTime);
+    @GetMapping("/getAvailableVehicle")
+    AvailableVehicleResponse getAvailableVehicle(@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+                                                 @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime);
 
     @GetMapping("/getReservatedVehicle")
     SingleEmployeeReservationResponse getReservedVehicle(@RequestHeader("Authorization") String authorization);

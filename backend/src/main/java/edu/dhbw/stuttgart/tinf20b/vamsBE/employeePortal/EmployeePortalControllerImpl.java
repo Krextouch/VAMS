@@ -4,6 +4,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +41,8 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     }
 
     @Override
-    public AvailableVehicleResponse getAvailableVehicle(@RequestParam("start") LocalDateTime startTime, @RequestParam("end") LocalDateTime endTime) {
+    public AvailableVehicleResponse getAvailableVehicle(@RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+                                                        @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
         return this.employeeService.getAvailableVehicle(startTime, endTime);
     }
 
