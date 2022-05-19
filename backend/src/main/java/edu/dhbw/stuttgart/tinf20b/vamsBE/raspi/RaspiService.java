@@ -60,18 +60,18 @@ public class RaspiService {
             isOfficeWorker = true;
         }
 
-        Optional<Reservation> reservationList = reservationRepository.findByEmployeeAndEndTimeOfReservationAfterAndStartTimeOfReservationBeforeAndVehicle(employee.get(),
+        Optional<Reservation> reservation = reservationRepository.findByEmployeeAndEndTimeOfReservationAfterAndStartTimeOfReservationBeforeAndVehicle(employee.get(),
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 device.get().getVin());
 
-        if (reservationList.isEmpty() && !isOfficeWorker) {
+        if (reservation.isEmpty() && !isOfficeWorker) {
             addRaspiLog(summonRequest.getWorkCard(), employee.get(), device.get(), false, false);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "No reservations found");
         }
 
         //Exception: All office workers can open the cars
-        if (reservationList.isEmpty() && isOfficeWorker) {
+        if (reservation.isEmpty() && isOfficeWorker) {
             addRaspiLog(summonRequest.getWorkCard(), employee.get(), device.get(), true, employee.get().isHasDrivingLicense());
             return SummonResponse.builder()
                     .authorizedOpening(true)
@@ -85,7 +85,7 @@ public class RaspiService {
         }
 
         //only normal employees need a verified reservation to drive a car
-        if (!reservationList.get().getIsVerified() && !isOfficeWorker) {
+        if (!reservation.get().getIsVerified() && !isOfficeWorker) {
             addRaspiLog(summonRequest.getWorkCard(), employee.get(), device.get(), false, false);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Reservation not validated");
         }
@@ -97,8 +97,8 @@ public class RaspiService {
                 .email(employee.get().getEmail())
                 .firstName(employee.get().getFirstName())
                 .lastName(employee.get().getLastName())
-                .beginn(reservationList.get().getStartTimeOfReservation())
-                .end(reservationList.get().getEndTimeOfReservation())
+                .beginn(reservation.get().getStartTimeOfReservation())
+                .end(reservation.get().getEndTimeOfReservation())
                 .build();
     }
 

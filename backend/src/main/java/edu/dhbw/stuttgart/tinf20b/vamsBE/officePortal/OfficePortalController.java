@@ -5,6 +5,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.ResetPasswordParam;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,4 +41,7 @@ public interface OfficePortalController {
 
     @GetMapping("/openReservationRequest")
     OpenReservationResponse openReservationRequest();
+
+    @PostMapping("/resetPassword")
+    String resetPassword(@RequestBody ResetPasswordParam resetPasswordParam);
 }

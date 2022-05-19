@@ -5,7 +5,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class PasswordResetParam {
+public class PasswordChangeParam {
 
-    String name;
+    String oldPassword;
+    String newPassword;
 }

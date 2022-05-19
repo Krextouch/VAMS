@@ -15,6 +15,7 @@ public class ResponseLogin {
 
     private String token;
     private LocalDateTime expiration;
+    private int employeeId;
     private String email;
     private String nameTag;
     private String firstName;

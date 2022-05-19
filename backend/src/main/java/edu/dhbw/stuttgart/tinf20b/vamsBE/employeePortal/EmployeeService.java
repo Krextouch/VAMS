@@ -259,20 +259,12 @@ public class EmployeeService {
         return reservationParamList;
     }
 
-    public String passwordReset(PasswordResetParam passwordResetParam) {
-        String name = passwordResetParam.getName();
-        String newPassword = "";
-        Employee employee;
+    public void passwordChange(PasswordChangeParam passwordChangeParam, String authorization) {
+        Employee employee = getEmployeeFromToken(authorization);
 
-        if (name.contains("@")) {
-            employee = employeeRepository.findByEmail(name).orElseThrow(() -> new UsernameNotFoundException("Email not found"));
-        } else if (name.matches("^[0-9]*$")) {
-            employee = employeeRepository.findByEmployeeId(Integer.parseInt(name)).orElseThrow(() -> new UsernameNotFoundException("Employee id not found"));
-        } else {
-            employee = employeeRepository.findByNameTag(name).orElseThrow(() -> new UsernameNotFoundException("Name tag not found"));
-        }
+        if (BCrypt.checkpw(passwordChangeParam.getOldPassword(), employeeRepository.findByEmployeeId(employee.getEmployeeId()).get().getPassword())) {
 
-        if (!(employee == null)) {
+            /*
             int leftLimit = 48; // numeral '0'
             int rightLimit = 122; // letter 'z'
             int targetStringLength = 32;
@@ -300,7 +292,27 @@ public class EmployeeService {
                     .build();
 
             this.employeeRepository.save(updatedEmployee);
+
+             */
+
+            Employee updatedEmployee = Employee.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .firstName(employee.getFirstName())
+                    .lastName(employee.getLastName())
+                    .email(employee.getEmail())
+                    .nameTag(employee.getNameTag())
+                    .password(BCrypt.hashpw(passwordChangeParam.getNewPassword(), BCrypt.gensalt()))
+                    .workCard(employee.getWorkCard())
+                    .birthday(employee.getBirthday())
+                    .birthplace(employee.getBirthplace())
+                    .hasDrivingLicense(employee.isHasDrivingLicense())
+                    .hasOfficeRights(employee.isHasOfficeRights())
+                    .reservation(employee.getReservation())
+                    .build();
+
+            this.employeeRepository.save(updatedEmployee);
+        } else {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Old password does not match");
         }
-        return newPassword;
     }
 }
