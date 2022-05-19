@@ -262,38 +262,7 @@ public class EmployeeService {
     public void passwordChange(PasswordChangeParam passwordChangeParam, String authorization) {
         Employee employee = getEmployeeFromToken(authorization);
 
-        if (BCrypt.checkpw(passwordChangeParam.getOldPassword(), employeeRepository.findByEmployeeId(employee.getEmployeeId()).get().getPassword())) {
-
-            /*
-            int leftLimit = 48; // numeral '0'
-            int rightLimit = 122; // letter 'z'
-            int targetStringLength = 32;
-            Random random = new Random();
-
-            newPassword = random.ints(leftLimit, rightLimit + 1)
-                    .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                    .limit(targetStringLength)
-                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                    .toString();
-
-            Employee updatedEmployee = Employee.builder()
-                    .employeeId(employee.getEmployeeId())
-                    .firstName(employee.getFirstName())
-                    .lastName(employee.getLastName())
-                    .email(employee.getEmail())
-                    .nameTag(employee.getNameTag())
-                    .password(BCrypt.hashpw(newPassword, BCrypt.gensalt()))
-                    .workCard(employee.getWorkCard())
-                    .birthday(employee.getBirthday())
-                    .birthplace(employee.getBirthplace())
-                    .hasDrivingLicense(employee.isHasDrivingLicense())
-                    .hasOfficeRights(employee.isHasOfficeRights())
-                    .reservation(employee.getReservation())
-                    .build();
-
-            this.employeeRepository.save(updatedEmployee);
-
-             */
+        if (BCrypt.checkpw(passwordChangeParam.getOldPassword(), employee.getPassword())) {
 
             Employee updatedEmployee = Employee.builder()
                     .employeeId(employee.getEmployeeId())
@@ -309,7 +278,6 @@ public class EmployeeService {
                     .hasOfficeRights(employee.isHasOfficeRights())
                     .reservation(employee.getReservation())
                     .build();
-
             this.employeeRepository.save(updatedEmployee);
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Old password does not match");
