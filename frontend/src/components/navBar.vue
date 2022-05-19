@@ -2,7 +2,7 @@
   <nav>
       <div class="nav-elmts-group" id="left">
         <ul>
-          <li class="icon" id="logo"><img src="../assets/Logo.png" alt="VAMS Logo"></li>
+          <li class="icon" id="logo"><img src="@/assets/Logo.png" alt="VAMS Logo"></li>
           <li><router-link :to="{ name: 'Home' }">Meine Reservierungen</router-link></li>
           <li><router-link :to="{ name: 'newReservation' }">Neue Reservierung</router-link></li>
         </ul>
@@ -10,8 +10,8 @@
       <div class="nav-elmts-group" id="right">
         <ul>
           <li v-if="this.hasOfficeRights === 'true'"><router-link :to="{ name: 'OfficeHome' }">zum Admin Portal</router-link></li>
-          <li class="icon" id="account"><router-link :to="{ name: 'Account' }"><img src="../assets/account.png" alt="Account settings"></router-link></li>
-          <li class="icon" id="logout"><a v-on:click="logout()"><img src="../assets/logout_white.png" alt="Log Out"></a></li>
+          <li class="icon" id="account"><router-link :to="{ name: 'Account' }"><img src="@/assets/account.png" alt="Account settings"></router-link></li>
+          <li class="icon" id="logout"><a v-on:click="logout()"><img src="@/assets/logout_white.png" alt="Log Out"></a></li>
         </ul>
       </div>
   </nav>
@@ -19,6 +19,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
   name: "navBar",
   created() {

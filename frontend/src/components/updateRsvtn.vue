@@ -29,6 +29,7 @@ export default {
     rsvtnToUpdate: function() {
       if (this.rsvtnToUpdate) {
         this.initForm()
+        this.getVehicles()
       }
     }
   },
@@ -54,28 +55,40 @@ export default {
         "vehicleVin": null,
         "employeeId": this.showAllEmployees === 'true' ? null : 1,//parseInt(localStorage.getItem('employeeId')),
       }
-      await axios.put(`employee/api/v1/updateReservation/${this.rsvtnToUpdate.id}`, data, {
+      const response = await axios.put(`employee/api/v1/updateReservation/${this.rsvtnToUpdate.id}`, data, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }
       })
-      this.$router.push({ name: this.$router.currentRoute})
+      if (response && response.status === 200) {
+        this.$emit('infoPopup', {status: 'success', msg: 'Änderungen wurden gespeichert'})
+        window.location.reload()
+      }
     },
     async verifyRsvtn() {
-      await axios.put(`employee/api/v1/verifyReservation/${this.rsvtnToUpdate.id}`, {
+      const response = await axios.put(`employee/api/v1/verifyReservation/${this.rsvtnToUpdate.id}`, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }
       })
-      this.$router.push({ name: this.$router.currentRoute})
+      if (response && response.status === 200) {
+        this.$emit('infoPopup', {status: 'success', msg: 'Reservierung wurde verifiziert'})
+        window.location.reload()
+      }
     },
     async deleteRsvtn() {
-      await axios.delete(`employee/api/v1/deleteReservation/${this.rsvtnToUpdate.id}`, {
+      const response = await axios.delete(`employee/api/v1/deleteReservation/${this.rsvtnToUpdate.id}`, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }
       })
-      this.$router.push({ name: this.$router.currentRoute})
+      if (response && response.status === 200) {
+        this.$emit('infoPopup', {status: 'success', msg: 'Reservierung wurde gelöscht'})
+        window.location.reload()
+      }
+    },
+    async getVehicles() {
+
     }
   }
 }

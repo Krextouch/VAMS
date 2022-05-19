@@ -17,22 +17,22 @@ export default {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  margin: 10px 0;
+  margin: 25px 0;
   padding: 15px 30px;
   border-radius: 10px;
   color: #222222ba;
 }
 
 .error {
-  background-color: rgba(255, 50, 50, 0.65);
+  background-color: rgba(255, 50, 50, 0.75);
   border: 2px solid darkred;
 }
 .info {
-  background-color: rgba(218, 165, 32, 0.65);
+  background-color: rgba(218, 165, 32, 0.75);
   border: 2px solid darkgoldenrod;
 }
 .success {
-  background-color: rgba(143, 188, 143, 0.65);
+  background-color: rgba(143, 188, 143, 0.80);
   border: 2px solid limegreen;
 }
 </style>

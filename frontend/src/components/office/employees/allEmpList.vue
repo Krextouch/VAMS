@@ -1,6 +1,6 @@
 <template>
   <div class="card-wrapper">
-    <table>
+    <table v-if="allEmployeesList.length !== 0">
         <tr class="table-head">
           <th>ID</th>
           <th>Vorname</th>

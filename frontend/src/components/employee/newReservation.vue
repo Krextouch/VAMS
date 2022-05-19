@@ -14,7 +14,7 @@
         <label for="vehicles">Verfügbare Fahrzeuge</label>
         <select class="vehicles" id="vehicles" v-model="vhcl_select">
           <option id="default" disabled value="">-- Fahrzeug wählen --</option>
-          <option v-for="vcl in availableVehicles" :key="JSON.stringify(vcl)">{{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }}</option>
+          <option v-for="vcl in availableVehicles" @click="selectVhcl(vcl)" :key="JSON.stringify(vcl)">{{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }} - {{ vcl.ps }}PS</option>
         </select>
       </div>
       <button type="submit">Erstellen</button>
@@ -33,26 +33,29 @@ export default {
   created() {
     const initDate = new Date()
     this.starttime = this.formatForDatetimeLocal(initDate)
-    this.endtime = this.formatForDatetimeLocal(this.addDays(1, initDate))
-    axios.post('employee/api/v1/getAvailableVehicle', {
-      "startTime": this.starttime,
-      "endTime": this.endtime
-    }, {
+    this.endtime = this.formatForDatetimeLocal(this.addDays(3, initDate))
+    let data = {
+      start: this.starttime,
+      end: this.endtime
+    }
+    console.log("sending: ", data)
+    axios.get('employee/api/v1/getAvailableVehicle', {
       headers: {
         'Authorization': "Bearer " + localStorage.token
-      }
+      },
+      params: data
     }).then(
         response => {
           console.log("getVehicle response", response)
           if (response.status === 200) {
-            this.availableVehicles = response.data
+            this.availableVehicles = response.data.availableVehicleParamList
             if (this.availableVehicles === []) {
-              this.$emit('infoPopup', ['info', "Keine Fahrzeuge verfügbar"])
+              this.$emit('infoPopup', {status: 'info', msg: "Keine Fahrzeuge verfügbar"})
             }
           }
         }
     ).catch(err => {
-        this.$emit('infoPopup', ['error', "Fahrzeug-Request fehlgeschlagen"])
+        this.$emit('infoPopup', {status: 'error', msg: "Fahrzeug-Request fehlgeschlagen"})
       console.log("getVehicle err: ", err)
     })
   },
@@ -61,13 +64,13 @@ export default {
       starttime: "",
       endtime: "",
       vhcl_select: "",
+      selected: "",
       availableVehicles: []
     }
   },
   methods: {
     formatForDatetimeLocal(date) {
       const datestring = date.getFullYear()+"-"+`${(date.getMonth()+1)<10?'0':''}`+(date.getMonth()+1)+"-"+date.getDate()+"T"+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
-      console.log(datestring)
       return datestring
     },
     addDays(numberOfDays, _date = new Date()) {
@@ -76,12 +79,12 @@ export default {
     },
     async sendNewRsvtn() {
       const data = {
-        "id": NaN,
         "startTimeOfReservation": this.starttime,
         "endTimeOfReservation": this.endtime,
         "isVerified": false,
         "vehicle": this.vhcl_select
       }
+      console.log("would create", data)
       axios.post('employee/api/v1/createReservation', data, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
@@ -90,6 +93,10 @@ export default {
           console.log("create err: ", err)
       })
       // this.$router.push({ name: 'Home'})
+    },
+    selectVhcl(_vcl) {
+      this.selected = _vcl
+      console.log("vcl selected: ", this.selected)
     }
   }
 }

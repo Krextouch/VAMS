@@ -1,25 +1,42 @@
 <template>
   <div class="card-wrapper">
     <h2>Passwort ändern</h2>
+    <div class="account-info">
+      <p>Name: <span>{{ this.name }}</span></p>
+      <p>Email: <span>{{ this.email }}</span></p>
+      <p>Kürzel: <span>{{ this.nameTag }}</span></p>
+      <p>Führerschein: <span>{{ this.hasDrivingLicense }}</span></p>
+      <p>Admin Berechtigung: <span>{{ this.hasDrivingLicense }}</span></p>
+    </div>
     <form @submit.prevent="submit">
-      <input type="password" v-model="password" placeholder="Neues Passwort"/>
-      <input type="password" v-model="password_repeat" placeholder="Passwort wiederholen"/>
+      <input type="password" v-model="password" placeholder="Neues Passwort" required/>
+      <input type="password" v-model="password_repeat" placeholder="Passwort wiederholen" required/>
       <button type="submit">Abschicken</button>
     </form>
   </div>
+  <impressum/>
+
 </template>
 
 <script>
 import axios from "axios";
+import impressum from "@/components/impressum";
 
 export default {
   name: "accountSettings",
   components: {
+    impressum
   },
+  emits: ['infoPopup'],
   data() {
     return {
       password: "",
-      password_repeat: ""
+      password_repeat: "",
+      name: localStorage.getItem('fullName'),
+      email: localStorage.getItem('email'),
+      nameTag: localStorage.getItem('nameTag'),
+      hasDrivingLicense: localStorage.getItem('hasLicense') === 'true' ? 'Ja' : 'Nein',
+      hasOfficeRights: localStorage.getItem('hasOfficeRights') === 'true' ? 'Ja' : 'Nein'
     }
   },
   methods: {
@@ -61,13 +78,29 @@ h2 {
   border-bottom: 1px solid black;
 }
 
+.account-info {
+  font-size: large;
+}
+
+.account-info p {
+  margin: 5px;
+  padding: 0;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.account-info p span {
+  color: black;
+  font-weight: normal;
+}
+
 form {
   padding: 5vh 1vw;
 }
 
 input {
   width: 66%;
-  margin: 0 10% 10% 10%;
+  margin: 0 10% 5% 10%;
   padding: 10px;
   font-size: medium;
   border-radius: 30px;

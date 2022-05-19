@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper">
-    <allRsvtnList @rsvtnClicked="updateRsvtn($event)" hasOfficeRights="false"/>
-    <updateRsvtn :rsvtnToUpdate="rsvtnToUpdate"/>
+    <allRsvtnList @infoPopup="$emit('infoPopup', $event)" @rsvtnClicked="updateRsvtn($event)" hasOfficeRights="false"/>
+    <updateRsvtn @infoPopup="$emit('infoPopup', $event)" :rsvtnToUpdate="rsvtnToUpdate"/>
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import updateRsvtn from '@/components/updateRsvtn.vue'
 
 export default {
   name: "HomePage",
+  emits: ['infoPopup'],
   components: {
     allRsvtnList,
     updateRsvtn

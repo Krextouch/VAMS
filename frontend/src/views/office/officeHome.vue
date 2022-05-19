@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper">
-    <allRsvtnList @rsvtnClicked="updateRsvtn($event)" showAllEmployees="true"/>
-    <updateRsvtn :rsvtnToUpdate="rsvtnToUpdate"/>
+    <allRsvtnList @infoPopup="$emit('infoPopup', $event)" @rsvtnClicked="updateRsvtn($event)" showAllEmployees="true"/>
+    <updateRsvtn @infoPopup="$emit('infoPopup', $event)" :rsvtnToUpdate="rsvtnToUpdate"/>
   </div>
 </template>
 

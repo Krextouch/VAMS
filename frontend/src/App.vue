@@ -29,6 +29,7 @@ export default {
       this.showInfo = true
       setTimeout(() => {
         this.showInfo = false
+        this.infoMsg.msg = ''
       }, 2500)
     }
   }

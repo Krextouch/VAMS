@@ -41,28 +41,57 @@ export default {
   emits: ['rsvtnClicked', 'infoPopup'],
   props: ['showAllEmployees'],
   created() {
-    const data = {
-      "startTimeFrame": null,
-      "endTimeFrame": null,
-      "isVerified": null,
-      "vehicleVin": null,
-      "employeeId": this.showAllEmployees === 'true' ? null : 2,//parseInt(localStorage.getItem('employeeId')),
-      "showAllEmployees": this.showAllEmployees === 'true'
-    }
-    axios.post('employee/api/v1/allReservations', data, {
-      headers: {
-        "Authorization": "Bearer " + localStorage.token
+    if (this.showAllEmployees  === 'true') {
+      const data = {
+        "startTimeFrame": this.filter.startTimeFrame,
+        "endTimeFrame": this.filter.endTimeFrame,
+        "isVerified": this.filter.isVerified,
+        "vehicleVin": this.filter.vehicleVin,
+        "employeeId": null,
+        "showAllEmployees": true
       }
-      }).then(res => {
-      console.log(res)
-          this.handleResponseData(res.data)
-        }).catch(err => {
-          console.log("err: ", err)
-    })
+      axios.post('employee/api/v1/allReservations', data, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+        }).then(res => {
+        console.log(res)
+            this.handleResponseData(res.data.reservationParamList)
+          }).catch(err => {
+            console.log("err: ", err)
+      })
+    } else if (!this.showAllEmployees || this.showAllEmployees  === 'false') {
+      const data = {
+        "startTimeFrame": this.filter.startTimeFrame,
+        "endTimeFrame": this.filter.endTimeFrame,
+        "isVerified": this.filter.isVerified,
+        "vehicleVin": this.filter.vehicleVin,
+        "employeeId": parseInt(localStorage.getItem('employeeId')),
+        "showAllEmployees": false
+      }
+      axios.post('employee/api/v1/allReservations', data, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+        }).then(res => {
+        console.log(res)
+            this.handleResponseData(res.data.reservationParamList)
+          }).catch(err => {
+            console.log("err: ", err)
+      })
+    }
   },
   data() {
     return {
-      allReservationList: []
+      allReservationList: [],
+      filter: {
+        startTimeFrame: null,
+        endTimeFrame: null,
+        isVerified: null,
+        vehicleVin: null,
+        employeeId: 2,
+        showAllEmployees: false
+      }
     }
   },
   methods: {
@@ -84,8 +113,7 @@ export default {
       return date.getDate()+"."+`${(date.getMonth()+1<10?'0':'')+date.getMonth()}`+"."+date.getFullYear()+" - "+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
     },
     handleResponseData(data) {
-      let resList = data.reservationParamList
-      resList.forEach(rsvtn => {
+      data.forEach(rsvtn => {
         let clearStartTime = this.formatClearDate(rsvtn.startTimeOfReservation)
         let strStartTime = this.formatForDatetimeLocal(rsvtn.startTimeOfReservation)
         let clearEndTime = this.formatClearDate(rsvtn.endTimeOfReservation)
@@ -117,7 +145,7 @@ export default {
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 table {
