@@ -5,6 +5,7 @@ import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.Employee;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeFilter;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.AllEmployeeResponse;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.OpenReservationResponse;
+import edu.dhbw.stuttgart.tinf20b.vamsBE.officePortal.model.ResetPasswordParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Controller;
@@ -73,5 +74,10 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     @Override
     public OpenReservationResponse openReservationRequest() {
         return this.officeService.openReservationRequest();
+    }
+
+    @Override
+    public String resetPassword(ResetPasswordParam resetPasswordParam) {
+        return officeService.resetPassword(resetPasswordParam);
     }
 }

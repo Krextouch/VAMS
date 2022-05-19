@@ -1,18 +1,15 @@
 package edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal;
 
 import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.Reservation;
-import edu.dhbw.stuttgart.tinf20b.vamsBE.core.model.ReservationRepository;
 import edu.dhbw.stuttgart.tinf20b.vamsBE.employeePortal.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Controller
 public class EmployeePortalControllerImpl implements EmployeePortalController {
@@ -57,7 +54,7 @@ public class EmployeePortalControllerImpl implements EmployeePortalController {
     }
 
     @Override
-    public String passwordReset(PasswordResetParam passwordResetParam) {
-        return employeeService.passwordReset(passwordResetParam);
+    public void passwordChange(PasswordChangeParam passwordChangeParam, String authorization) {
+        employeeService.passwordChange(passwordChangeParam, authorization);
     }
 }
