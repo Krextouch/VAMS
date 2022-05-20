@@ -13,6 +13,7 @@ export default {
 
 <style scoped>
 .info-wrapper {
+  max-width: 40vw;
   position: absolute;
   bottom: 0;
   left: 50%;

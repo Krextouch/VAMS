@@ -92,7 +92,7 @@ export default {
     background-color: rgba(105, 105, 105, 0.99);
     border: none;
     border-radius: 15px;
-    background-color: cornflowerblue;
+    background-image: linear-gradient(to right, orange 0%, orangered 100%);
   }
 
   button:hover, button:focus {

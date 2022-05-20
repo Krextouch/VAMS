@@ -4,9 +4,9 @@
       <form @submit.prevent="updateRsvtn">
         <input type="datetime-local" id="start-time" name="starttime" v-model="starttime" required placeholder="Start Zeit"/>
         <input type="datetime-local" id="end-time" name="endtime" v-model="endtime" required placeholder="End Zeit"/>
-        <select class="vehicles" id="vehicles" v-model="vhcl_select">
+        <select class="vehicles" id="vehicles" v-model="vhcl_select" required>
           <option id="default" disabled value="">-- Fahrzeug wählen --</option>
-          <option v-for="vcl in availableVehicles" :key="JSON.stringify(vcl)">{{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }}</option>
+          <option v-for="vcl in availableVehicles" :key="JSON.stringify(vcl)">{{ vcl.vin }}: {{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }}</option>
         </select>
         <button type="submit">Abschicken</button>
       </form>
@@ -28,7 +28,18 @@ export default {
   watch: {
     rsvtnToUpdate: function() {
       if (this.rsvtnToUpdate) {
+        console.log(this.rsvtnToUpdate)
         this.initForm()
+        this.getVehicles()
+      }
+    },
+    starttime: {
+      handler() {
+        this.getVehicles()
+      }
+    },
+    endtime: {
+      handler() {
         this.getVehicles()
       }
     }
@@ -66,10 +77,14 @@ export default {
       }
     },
     async verifyRsvtn() {
-      const response = await axios.put(`employee/api/v1/verifyReservation/${this.rsvtnToUpdate.id}`, {
+      const response = await axios.put(`office/api/v1/verifyReservation/${this.rsvtnToUpdate.id}`, true,{
         headers: {
-          "Authorization": "Bearer " + localStorage.token
+          "Authorization": "Bearer " + localStorage.token,
+          "Content-Type": "application/json"
         }
+      }).catch(err => {
+        console.log(err)
+        this.$emit('infoPopup', {status: 'error', msg: 'Verifizierung fehlgeschlagen'})
       })
       if (response && response.status === 200) {
         this.$emit('infoPopup', {status: 'success', msg: 'Reservierung wurde verifiziert'})
@@ -77,18 +92,47 @@ export default {
       }
     },
     async deleteRsvtn() {
+      // const response = await axios.put(`office/api/v1/verifyReservation/${this.rsvtnToUpdate.id}`, false,{
       const response = await axios.delete(`employee/api/v1/deleteReservation/${this.rsvtnToUpdate.id}`, {
         headers: {
-          "Authorization": "Bearer " + localStorage.token
+          "Authorization": "Bearer " + localStorage.token,
+          "Content-Type": "application/json"
         }
+      }).catch(err => {
+        console.log(err)
+        this.$emit('infoPopup', {status: 'error', msg: 'Reservierung konnte nicht gelöscht werden'})
       })
       if (response && response.status === 200) {
         this.$emit('infoPopup', {status: 'success', msg: 'Reservierung wurde gelöscht'})
         window.location.reload()
       }
     },
-    async getVehicles() {
-
+    getVehicles() {
+      if (this.starttime !== '' && this.endtime !== '') {
+        let data = {
+          start: this.starttime,
+          end: this.endtime
+        }
+        console.log("getAvlblVhcl", data)
+        axios.get('employee/api/v1/getAvailableVehicle', {
+          headers: {
+            'Authorization': "Bearer " + localStorage.token
+          },
+          params: data
+        }).then(
+            response => {
+              if (response.status === 200) {
+                this.availableVehicles = response.data.availableVehicleParamList
+                if (this.availableVehicles === []) {
+                  this.$emit('infoPopup', {status: 'info', msg: "Keine Fahrzeuge verfügbar"})
+                }
+              }
+            }
+        ).catch(err => {
+          this.$emit('infoPopup', {status: 'error', msg: "Fahrzeug-Request fehlgeschlagen"})
+          console.log("getVehicle err: ", err)
+        })
+      }
     }
   }
 }
@@ -96,14 +140,15 @@ export default {
 
 <style scoped>
 .card-wrapper {
-  width: 40vw;
-  /*height: calc(90vh - 96px - 2px);*/
+  width: 43vw;
+  height: calc(94vh - 96px - 2px);
   background: dimgray;
   padding: 0;
-  margin: 5vh 5vw;
+  margin: 3vh 3vw;
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;
+  overflow-y: auto;
 }
 
 .info {
@@ -146,7 +191,7 @@ button {
   background-color: rgba(105, 105, 105, 0.99);
   border: none;
   border-radius: 15px;
-  background-color: cornflowerblue;
+  background-image: linear-gradient(to right, orange 0%, orangered 100%);
 }
 
 button:hover, button:focus {
@@ -161,11 +206,13 @@ button:active {
 }
 
 button#delete {
+  background-image: none;
   background-color: orangered;
   margin: 0 1%;
 }
 
 button#verify {
+  background-image: none;
   background-color: darkseagreen;
   margin: 0 1%;
 }

@@ -4,7 +4,7 @@
       <ul>
         <li class="icon" id="logo"><img src="@/assets/Logo.png" alt="VAMS Logo"></li>
         <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'Office' }">Alle Reservierungen</router-link></li>
-        <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'allVehicles' }">Fahrzeuge</router-link></li>
+        <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'newVehicle' }">Fahrzeug anlegen</router-link></li>
         <li v-if="this.hasOfficeRights"><router-link :to="{ name: 'allEmployees' }">Mitarbeiter</router-link></li>
       </ul>
     </div>

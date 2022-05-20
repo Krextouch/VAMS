@@ -12,9 +12,9 @@
       </div>
       <div class="inp-wrapper">
         <label for="vehicles">Verfügbare Fahrzeuge</label>
-        <select class="vehicles" id="vehicles" v-model="vhcl_select">
+        <select class="vehicles" id="vehicles" v-model="vhcl_select" required>
           <option id="default" disabled value="">-- Fahrzeug wählen --</option>
-          <option v-for="vcl in availableVehicles" @click="selectVhcl(vcl)" :key="JSON.stringify(vcl)">{{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }} - {{ vcl.ps }}PS</option>
+          <option v-for="vcl in availableVehicles" :key="JSON.stringify(vcl)">{{ vcl.vin }}: {{ vcl.brand }} {{ vcl.model }} in {{ vcl.color }} - {{ vcl.ps }}PS</option>
         </select>
       </div>
       <button type="submit">Erstellen</button>
@@ -28,36 +28,22 @@ import axios from "axios";
 export default {
   name: "newReservation",
   emits: ['infoPopup'],
-  components: {
+  watch: {
+    starttime: {
+      handler() {
+        this.getVehicles()
+      }
+    },
+    endtime: {
+      handler() {
+        this.getVehicles()
+      }
+    }
   },
   created() {
     const initDate = new Date()
     this.starttime = this.formatForDatetimeLocal(initDate)
     this.endtime = this.formatForDatetimeLocal(this.addDays(3, initDate))
-    let data = {
-      start: this.starttime,
-      end: this.endtime
-    }
-    console.log("sending: ", data)
-    axios.get('employee/api/v1/getAvailableVehicle', {
-      headers: {
-        'Authorization': "Bearer " + localStorage.token
-      },
-      params: data
-    }).then(
-        response => {
-          console.log("getVehicle response", response)
-          if (response.status === 200) {
-            this.availableVehicles = response.data.availableVehicleParamList
-            if (this.availableVehicles === []) {
-              this.$emit('infoPopup', {status: 'info', msg: "Keine Fahrzeuge verfügbar"})
-            }
-          }
-        }
-    ).catch(err => {
-        this.$emit('infoPopup', {status: 'error', msg: "Fahrzeug-Request fehlgeschlagen"})
-      console.log("getVehicle err: ", err)
-    })
   },
   data() {
     return {
@@ -77,26 +63,63 @@ export default {
       _date.setTime(_date.getTime() + numberOfDays * 24 * 60 * 60 * 1000)
       return new Date(_date)
     },
+    retrieveVhclFromString(searchStr) {
+      const subStrings = searchStr.split(":")
+      const vin = subStrings[0]
+      for (let vcl of this.availableVehicles) {
+        if (vcl.vin === vin) {
+          return vcl.vin
+        }
+      }
+    },
     async sendNewRsvtn() {
+      const vin = this.retrieveVhclFromString(this.vhcl_select)
       const data = {
         "startTimeOfReservation": this.starttime,
         "endTimeOfReservation": this.endtime,
         "isVerified": false,
-        "vehicle": this.vhcl_select
+        "vehicle": {"vin": vin},
+        "employee": {"employeeId": parseInt(localStorage.getItem('employeeId'))}
       }
-      console.log("would create", data)
       axios.post('employee/api/v1/createReservation', data, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
         }
+      }).then(response => {
+        console.log(response)
+        if (response && response.status === 200) {
+          this.$emit('infoPopup', {status: 'success', msg: 'Reservierung wurde angelegt'})
+          this.$router.push({ name: 'Home'})
+        }
       }).catch(err => {
           console.log("create err: ", err)
       })
-      // this.$router.push({ name: 'Home'})
     },
-    selectVhcl(_vcl) {
-      this.selected = _vcl
-      console.log("vcl selected: ", this.selected)
+    getVehicles() {
+      if (this.starttime !== '' && this.endtime !== '') {
+        let data = {
+          start: this.starttime,
+          end: this.endtime
+        }
+        axios.get('employee/api/v1/getAvailableVehicle', {
+          headers: {
+            'Authorization': "Bearer " + localStorage.token
+          },
+          params: data
+        }).then(response => {
+          console.log(response)
+              if (response.status === 200) {
+                this.availableVehicles = response.data.availableVehicleParamList
+                if (this.availableVehicles === []) {
+                  this.$emit('infoPopup', {status: 'info', msg: "Keine Fahrzeuge verfügbar"})
+                }
+              }
+            }
+        ).catch(err => {
+          this.$emit('infoPopup', {status: 'error', msg: "Fahrzeug-Request fehlgeschlagen"})
+          console.log("getVehicle err: ", err)
+        })
+      }
     }
   }
 }
@@ -162,7 +185,7 @@ button {
   background-color: rgba(105, 105, 105, 0.99);
   border: none;
   border-radius: 15px;
-  background-color: cornflowerblue;
+  background-image: linear-gradient(to right, orange 0%, orangered 100%);
 }
 
 button:hover, button:focus {

@@ -24,7 +24,11 @@
         </div>
         <button type="submit">Änderungen speichern</button>
       </form>
+      <button id="resetPwd" @click="resetPwd">Passwort erneuern</button>
       <button id="delete" @click="deleteEmp">Mitarbeiter Entfernen</button>
+      <div class="newPwd" v-show="showPwd">
+        <p>Neues Passwort: <span id="pwd">{{ this.newPwd }}</span></p>
+      </div>
     </div>
     <div class="info" id="none-selected" v-if="!empToUpdate">
       <span>Wähle einen Mitarbeiter um zu bearbeiten</span>
@@ -58,6 +62,8 @@ export default {
       workCard: "",
       hasLicense: false,
       hasOfficeRights: false,
+      newPwd: "",
+      showPwd: false
     }
   },
   methods: {
@@ -115,6 +121,24 @@ export default {
         window.location.reload()
         this.$emit('infoPopup', {status: "success", msg: "Mitarbeiter gelöscht"})
       }
+    },
+    async resetPwd() {
+      const response = await axios.post(`office/api/v1/resetPassword`, {
+        employeeName: this.empToUpdate.nameTag
+      }, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+      }).catch(err => {
+        console.log("deleteEmp err: ", err)
+        this.$router.push({name: "allEmployees"})
+        this.$emit('infoPopup', {status: "error", msg: "Mitarbeiter konnte nicht gelöscht werden"})
+      })
+      if (response && response.status === 200) {
+        console.log(response)
+        this.newPwd = response.data
+        this.showPwd = true
+      }
     }
   }
 }
@@ -122,13 +146,15 @@ export default {
 
 <style scoped>
 .card-wrapper {
-  width: 45vw;
+  width: 43vw;
+  height: calc(94vh - 96px - 2px);
   background: dimgray;
   padding: 0;
-  margin: 5vh auto;
+  margin: 3vh 3vw;
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;
+  overflow-y: auto;
 }
 
 h2 {
@@ -188,7 +214,8 @@ input[type="checkbox"] {
 button {
   display: inline-block;
   padding: 12px 25px;
-  font-size: 24px;
+  margin: 3px;
+  font-size: larger;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -196,8 +223,7 @@ button {
   color: #fff;
   border: none;
   border-radius: 15px;
-  background-color: cornflowerblue;
-}
+  background-image: linear-gradient(to right, orange 0%, orangered 100%);}
 
 button:hover, button:focus {
   box-shadow: 0 5px #999;
@@ -211,6 +237,22 @@ button:active {
 }
 
 button#delete {
+  background-image: none;
   background-color: orangered;
+}
+
+button#resetPwd {
+  background-image: none;
+  background-color: gray;
+}
+
+.newPwd p{
+  color: black;
+  font-weight: bold;
+}
+
+#pwd {
+  color: #2c3e50;
+  font-weight: normal;
 }
 </style>

@@ -55,7 +55,6 @@ export default {
           "Authorization": "Bearer " + localStorage.token
         }
         }).then(res => {
-        console.log(res)
             this.handleResponseData(res.data.reservationParamList)
           }).catch(err => {
             console.log("err: ", err)
@@ -74,7 +73,6 @@ export default {
           "Authorization": "Bearer " + localStorage.token
         }
         }).then(res => {
-        console.log(res)
             this.handleResponseData(res.data.reservationParamList)
           }).catch(err => {
             console.log("err: ", err)
@@ -110,7 +108,7 @@ export default {
     },
     formatClearDate(_dateStr) {
       const date = new Date(_dateStr)
-      return date.getDate()+"."+`${(date.getMonth()+1<10?'0':'')+date.getMonth()}`+"."+date.getFullYear()+" - "+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
+      return date.getDate()+"."+`${(date.getMonth()+1<10?'0':'')+(date.getMonth()+1)}`+"."+date.getFullYear()+" - "+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
     },
     handleResponseData(data) {
       data.forEach(rsvtn => {
@@ -137,11 +135,11 @@ export default {
 
 <style scoped>
 .card-wrapper {
-  width: 40vw;
+  width: 43vw;
   height: calc(94vh - 96px - 2px);
   background: dimgray;
   padding: 0;
-  margin: 3vh 5vw;
+  margin: 3vh 3vw;
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;

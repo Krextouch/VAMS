@@ -9,8 +9,9 @@
       <p>Admin Berechtigung: <span>{{ this.hasDrivingLicense }}</span></p>
     </div>
     <form @submit.prevent="submit">
+      <input type="password" v-model="old_password" placeholder="Altes Passwort" required/>
       <input type="password" v-model="password" placeholder="Neues Passwort" required/>
-      <input type="password" v-model="password_repeat" placeholder="Passwort wiederholen" required/>
+      <input type="password" v-model="password_repeat" placeholder="Neues Passwort wiederholen" required/>
       <button type="submit">Abschicken</button>
     </form>
   </div>
@@ -30,6 +31,7 @@ export default {
   emits: ['infoPopup'],
   data() {
     return {
+      old_password: "",
       password: "",
       password_repeat: "",
       name: localStorage.getItem('fullName'),
@@ -41,8 +43,9 @@ export default {
   },
   methods: {
     async sendData() {
-      const response = await axios.post("employee/api/v1/passwordReset", {
-        name: localStorage.getItem("username")
+      const response = await axios.post("employee/api/v1/passwordChange", {
+        oldPassword: this.old_password,
+        newPassword: this.password
       }, {
         headers: {
           "Authorization": "Bearer " + localStorage.token
@@ -50,10 +53,19 @@ export default {
       }).catch(err => {
         console.log("resetPassword err: ", err)
       })
-      console.log(response)
+      if (response && response.status === 200) {
+        this.$router.push({ name: 'Home'})
+        this.$emit('infoPopup', {status: 'success', msg: 'Passwort wurde geändert'})
+      }
     },
     submit() {
-      this.sendData()
+      if (this.password === this.password_repeat) {
+        this.sendData()
+      } else {
+        this.$emit('infoPopup', {status: 'info', msg: 'Neue Passörter stimmen nicht überein'})
+        this.password = ""
+        this.password_repeat = ""
+      }
     }
   }
 }
@@ -118,7 +130,7 @@ button {
   background-color: rgba(105, 105, 105, 0.99);
   border: none;
   border-radius: 15px;
-  background-color: cornflowerblue;
+  background-image: linear-gradient(to right, orange 0%, orangered 100%);
 }
 
 button:hover, button:focus {

@@ -3,7 +3,7 @@ import LoginMask from './views/login.vue'
 import account from "@/views/account";
 import office from "@/views/office/office";
 import officeHome from "@/views/office/officeHome";
-import vehicles from "@/views/office/vehicles";
+import vehicles from "@/views/office/newVehicle";
 import employees from "@/views/office/employees";
 import newEmployee from "@/components/office/employees/newEmployee";
 import HomePage from "@/views/home.vue";
@@ -35,8 +35,8 @@ const routes = [
                     component: officeHome
                 },
                 {
-                    path: 'vehicles',
-                    name: 'allVehicles',
+                    path: 'newVehicle',
+                    name: 'newVehicle',
                     component: vehicles
                 },
                 {

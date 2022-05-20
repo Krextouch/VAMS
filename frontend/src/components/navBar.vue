@@ -63,7 +63,7 @@ nav {
 }
 
 #logo {
-  padding: 0 3px;
+  padding: 0 10px;
 }
 
 #logo img {

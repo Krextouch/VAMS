@@ -112,15 +112,15 @@ export default {
 <style scoped>
 .card-wrapper {
   position: relative;
-  width: 45vw;
+  width: 43vw;
   height: calc(94vh - 96px - 2px);
   background: dimgray;
   padding: 0;
-  margin: 3vh 1vw 3vw 3vw;
+  margin: 3vh 3vw;
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 table {
@@ -182,7 +182,7 @@ table {
   outline: none;
   border: none;
   border-radius: 15px;
-  background-color: cornflowerblue;
+  background-image: linear-gradient(to right, orange 0%, orangered 100%);
   font-size: 22px;
 }
 
