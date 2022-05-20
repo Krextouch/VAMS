@@ -37,7 +37,7 @@ public interface OfficePortalController {
     void updateVehicle(@PathVariable("vin") String vin, @RequestBody Vehicle vehicle);
 
     @PutMapping("/verifyReservation/{reservationId}")
-    void verifyReservation(@PathVariable("reservationId") int reservationId, @RequestBody String verifyIt);
+    void verifyReservation(@PathVariable("reservationId") int reservationId, @RequestBody boolean verifyIt);
 
     @GetMapping("/openReservationRequest")
     OpenReservationResponse openReservationRequest();

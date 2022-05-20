@@ -41,7 +41,7 @@ public class EmployeeService {
         if (!(reservationRepository.existsById(reservation.getId()))) {
 
             if(reservation.getStartTimeOfReservation().isAfter(reservation.getEndTimeOfReservation())) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Starttime of the reservation must be bevor the endtime");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Start time of the reservation must be bevor the end time");
             }
 
             for (Reservation tmpReservation : reservationRepository.findAllByVehicle_Vin(reservation.getVehicle().getVin()).get()) {

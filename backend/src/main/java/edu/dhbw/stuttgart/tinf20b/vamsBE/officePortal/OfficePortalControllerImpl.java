@@ -67,8 +67,8 @@ public class OfficePortalControllerImpl implements OfficePortalController {
     }
 
     @Override
-    public void verifyReservation(@PathVariable("reservationId") int reservationId, @RequestBody String verifyIt) {
-        this.officeService.verifyReservation(reservationId, Boolean.parseBoolean(verifyIt));
+    public void verifyReservation(@PathVariable("reservationId") int reservationId, @RequestBody boolean verifyIt) {
+        this.officeService.verifyReservation(reservationId, verifyIt);
     }
 
     @Override
