@@ -1,9 +1,9 @@
 <template>
   <div class="LoginMaskWrapper">
-    <h1>VAMS</h1>
+    <img id="logo" src="@/assets/Logo.png" alt="VAMS Logo">
     <form @submit.prevent="handleSubmit">
-      <input type="text" id="username" name="username" autocomplete="username" v-model="username" required placeholder="Username" />
-      <input type="password" id="password" name="password" autocomplete="current-password" v-model="password" required placeholder="Password" />
+      <input type="text" id="username" name="username" autocomplete="username" v-model="username" required placeholder="Email | Kürzel" />
+      <input type="password" id="password" name="password" autocomplete="current-password" v-model="password" required placeholder="Passwort" />
       <button type="submit">Login</button>
     </form>
   </div>
@@ -14,8 +14,7 @@ import axios from 'axios'
 
 export default {
   name: 'LoginMask',
-  props: {
-  },
+  emits: ['infoPopup'],
   data() {
     return {
       username: '',
@@ -24,13 +23,29 @@ export default {
   },
   methods: {
     async handleSubmit() {
-        const response = await axios.post('auth/api/v1/login', {
-          username: this.username,
-          password: this.password
-        });
+      const response = await axios.post('auth/api/v1/login', {
+        username: this.username,
+        password: this.password
+      }).catch(err => {
+        console.log(err)
+        this.$emit('infoPopup', {status: "error", msg: "Login error"})
+      })
+      if (response && response.status === 200) {
         localStorage.setItem('token', response.data.token)
         localStorage.setItem('expires', response.data.expiration)
+        localStorage.setItem('employeeId', response.data.employeeId)
+        localStorage.setItem('firstName', response.data.firstName)
+        localStorage.setItem('lastName', response.data.lastName)
+        localStorage.setItem('fullName', response.data.firstName + " " + response.data.lastName)
+        localStorage.setItem('email', response.data.email)
+        localStorage.setItem('nameTag', response.data.nameTag)
+        localStorage.setItem('hasLicense', response.data.hasDrivingLicense)
+        localStorage.setItem('hasOfficeRights', response.data.hasOfficeRights)
         this.$router.push({ name: 'Home'})
+        this.$emit('infoPopup', {status: 'success', msg: 'Eingeloggt als '+localStorage.fullName})
+      } else {
+        this.$emit('infoPopup', {status: "error", msg: "Invalid Login"})
+      }
     }
   }
 }
@@ -39,40 +54,26 @@ export default {
 <style scoped>
   .LoginMaskWrapper {
     background: dimgray;
-    position: absolute;
-    margin: auto;
-    padding: 0;
-    top: -10vh; left: 0; bottom: 0; right: 0;
+    margin: 15vh auto;
+    padding: 25px;
+    top: 10vh;
     width: 50vw;
     max-width: 750px;
     min-width: 300px;
-    height: 35vw;
-    max-height: 500px;
     min-height: 400px;
     border: 2px solid gray;
     border-radius: 15px;
     box-shadow: inset 0 0 1em black;
   }
 
-  h1 {
-    width: 50%;
-    margin: 20px 25%;
-    padding-bottom: 19px;
-    border-bottom: 1px solid black;
-    letter-spacing: 2px;
-  }
-
-  p {
-    width: 66%;
-    margin: 0 10%;
-    font-size: large;
-    color: white;
+  img#logo {
+    height: 15vh;
   }
 
   input {
     width: 66%;
     height: 30px;
-    margin: 0 10% 10% 10%;
+    margin: 2.5% 10%;
     padding: 10px;
     font-size: medium;
     border-radius: 30px;
@@ -80,6 +81,7 @@ export default {
 
   button {
     display: inline-block;
+    margin-top: 2%;
     padding: 12px 25px;
     font-size: 24px;
     cursor: pointer;
@@ -90,7 +92,7 @@ export default {
     background-color: rgba(105, 105, 105, 0.99);
     border: none;
     border-radius: 15px;
-    background-color: cornflowerblue;
+    background-image: linear-gradient(to right, orange 0%, orangered 100%);
   }
 
   button:hover, button:focus {

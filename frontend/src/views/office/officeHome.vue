@@ -1,6 +1,6 @@
 <template>
   <div class="content-wrapper">
-    <allRsvtnList @infoPopup="$emit('infoPopup', $event)" @rsvtnClicked="updateRsvtn($event)" hasOfficeRights="false"/>
+    <allRsvtnList @infoPopup="$emit('infoPopup', $event)" @rsvtnClicked="updateRsvtn($event)" showAllEmployees="true"/>
     <updateRsvtn @infoPopup="$emit('infoPopup', $event)" :rsvtnToUpdate="rsvtnToUpdate"/>
   </div>
 </template>
@@ -10,7 +10,7 @@ import allRsvtnList from '@/components/allRsvtnList.vue'
 import updateRsvtn from '@/components/updateRsvtn.vue'
 
 export default {
-  name: "HomePage",
+  name: "officeHome",
   emits: ['infoPopup'],
   components: {
     allRsvtnList,
@@ -35,4 +35,5 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 </style>

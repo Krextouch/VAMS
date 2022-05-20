@@ -1,21 +1,33 @@
 <template>
-  <div class="list-wrapper">
-    <ul>
-      <li class="rsvtn-wrapper" v-for="rsvtn in reservationParamList" :key="rsvtn.id" v-on:click="updateReservation(rsvtn)">
-        <div class="param-wrapper">
-          <span class="rsvtn-param" v-for="(value, name) in rsvtn" :key="name" :class="name">{{ value }}</span>
-          <span v-if="rsvtn.isVerified" class="tooltip">
-              <img src="../assets/verified.png" alt="Verified">
-              <span class="tooltiptext">Verifiziert</span>
-          </span>
-          <span v-if="!rsvtn.isVerified" class="tooltip">
-              <img src="../assets/waiting.png" alt="Waiting for verification">
-              <span class="tooltiptext">Wartet auf<br>Verifizierung</span>
-            </span>
-        </div>
-      </li>
-    </ul>
-    <div class="info" id="empty-list" v-if="reservationParamList.length == 0">
+  <div class="card-wrapper">
+    <table v-if="allReservationList.length !== 0">
+      <tr class="table-head">
+        <th>Beginn</th>
+        <th>Ende</th>
+        <th>Von [ID]</th>
+        <th>Verifiziert</th>
+      </tr>
+      <tr class="rsvtn-wrapper" v-for="rsvtn in allReservationList" :key="rsvtn.id" :ref="'ref-'+rsvtn.id" v-on:click="updateReservation(rsvtn)">
+        <td class="param-wrapper">
+          <span class="rsvtn-param">{{ rsvtn.startTimeOfReservation }}</span>
+        </td>
+        <td class="param-wrapper">
+          <span class="rsvtn-param">{{ rsvtn.endTimeOfReservation }}</span>
+        </td>
+        <td class="param-wrapper">
+          <span class="rsvtn-param">{{ rsvtn.employeeId }}</span>
+        </td>
+        <td class="param-wrapper tooltip" v-if="rsvtn.isVerified" >
+          <img src="../assets/verified.png" alt="Verified">
+          <span class="tooltiptext">Verifiziert</span>
+        </td>
+        <td class="param-wrapper tooltip" v-if="!rsvtn.isVerified">
+          <img src="../assets/waiting.png" alt="Waiting for verification">
+          <span class="tooltiptext">Wartet auf<br>Verifizierung</span>
+        </td>
+      </tr>
+    </table>
+    <div class="info" id="empty-list" v-if="allReservationList.length === 0">
       <span>Zurzeit keine Reservierungen verfügbar</span>
     </div>
   </div>
@@ -26,112 +38,158 @@ import axios from "axios";
 
 export default {
   name: "allRsvtnList",
-  created () {
-    axios.post('employee/api/v1/allReservations', {
-        "startTimeFrame": null,
-        "endTimeFrame": null,
-        "isVerified": null,
-        "vehicleVin": null,
-        "employeeId": 2,
-        "showAllEmployees": null
-      }, {
-      headers: {
-        "Authorization": "Bearer " + localStorage.token
+  emits: ['rsvtnClicked', 'infoPopup'],
+  props: ['showAllEmployees'],
+  created() {
+    if (this.showAllEmployees  === 'true') {
+      const data = {
+        "startTimeFrame": this.filter.startTimeFrame,
+        "endTimeFrame": this.filter.endTimeFrame,
+        "isVerified": this.filter.isVerified,
+        "vehicleVin": this.filter.vehicleVin,
+        "employeeId": null,
+        "showAllEmployees": true
       }
-      }).then(
-        res => {
-          this.handleResponseData(res)
-          console.log(res)
-        }).catch(err => {
-      console.log("err: ", err)
-    })
+      axios.post('employee/api/v1/allReservations', data, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+        }).then(res => {
+            this.handleResponseData(res.data.reservationParamList)
+          }).catch(err => {
+            console.log("err: ", err)
+      })
+    } else if (!this.showAllEmployees || this.showAllEmployees  === 'false') {
+      const data = {
+        "startTimeFrame": this.filter.startTimeFrame,
+        "endTimeFrame": this.filter.endTimeFrame,
+        "isVerified": this.filter.isVerified,
+        "vehicleVin": this.filter.vehicleVin,
+        "employeeId": parseInt(localStorage.getItem('employeeId')),
+        "showAllEmployees": false
+      }
+      axios.post('employee/api/v1/allReservations', data, {
+        headers: {
+          "Authorization": "Bearer " + localStorage.token
+        }
+        }).then(res => {
+            this.handleResponseData(res.data.reservationParamList)
+          }).catch(err => {
+            console.log("err: ", err)
+      })
+    }
   },
   data() {
     return {
-      reservationParamList: [
-          {id: 0, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 1, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 2, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 3, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 4, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 5, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 6, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 7, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 8, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 9, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 10, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: false, vehicleVin: "", employeeId: 0},
-          {id: 11, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 12, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0},
-          {id: 13, startTimeOfReservation: "2022-05-10T00:00:00", endTimeOfReservation: "2022-06-01T23:59:00", isVerified: true, vehicleVin: "", employeeId: 0}
-      ]
+      allReservationList: [],
+      filter: {
+        startTimeFrame: null,
+        endTimeFrame: null,
+        isVerified: null,
+        vehicleVin: null,
+        employeeId: 2,
+        showAllEmployees: false
+      }
     }
   },
   methods: {
-    updateReservation(rsvtn) {
-      console.log("clicked reservation of id:", rsvtn.id)
+    updateReservation(rsvtnToUpdate) {
+      const items = document.getElementsByClassName('active')
+      if (items.length > 0) {
+        items[0].classList.remove('active')
+      }
+      this.$refs['ref-'+rsvtnToUpdate.id][0].classList.add('active')
+      this.$emit('rsvtnClicked', rsvtnToUpdate)
     },
-    formatDate(_dateStr) {
+    formatForDatetimeLocal(_date) {
+      const date = new Date(_date)
+      let datestr = date.getFullYear()+"-"+`${(date.getMonth()+1)<10?'0':''}`+(date.getMonth()+1)+"-"+date.getDate()+"T"+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
+      return datestr
+    },
+    formatClearDate(_dateStr) {
       const date = new Date(_dateStr)
-      console.log(_dateStr, " erstellt: ", date)
-      return date.getDay() + "." + date.getMonth() + "." + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes()
+      return date.getDate()+"."+`${(date.getMonth()+1<10?'0':'')+(date.getMonth()+1)}`+"."+date.getFullYear()+" - "+(date.getHours()<10?'0':'')+date.getHours()+":"+(date.getMinutes()<10?'0':'')+date.getMinutes()
     },
-    handleResponseData(resList) {
-      let allReservationList = []
-      resList.forEach(rsvtn => {
-        let formattedStartTime = this.formatDate(rsvtn.startTimeOfReservation)
-        let formattedEndTime = this.formatDate(rsvtn.endTimeOfReservation)
+    handleResponseData(data) {
+      data.forEach(rsvtn => {
+        let clearStartTime = this.formatClearDate(rsvtn.startTimeOfReservation)
+        let strStartTime = this.formatForDatetimeLocal(rsvtn.startTimeOfReservation)
+        let clearEndTime = this.formatClearDate(rsvtn.endTimeOfReservation)
+        let strEndTime = this.formatForDatetimeLocal(rsvtn.endTimeOfReservation)
         let tempRsvtnObj = {
           id: rsvtn.id,
-          startTimeOfReservation: formattedStartTime,
-          endTimeOfReservation: formattedEndTime,
+          startTimeOfReservation: clearStartTime,
+          startTimeString: strStartTime,
+          endTimeOfReservation: clearEndTime,
+          endTimeString: strEndTime,
           isVerified: rsvtn.isVerified,
           vehicleVin: rsvtn.vehicleVin,
           employeeId: rsvtn.employeeId
         }
-        // console.log(tempRsvtnObj)
-        allReservationList.push(tempRsvtnObj)
+        this.allReservationList.push(tempRsvtnObj)
       })
-      return allReservationList
     }
   }
 }
 </script>
 
 <style scoped>
-.list-wrapper {
-  width: 40vw;
+.card-wrapper {
+  width: 43vw;
   height: calc(94vh - 96px - 2px);
   background: dimgray;
   padding: 0;
-  margin: 3vh 5vw;
+  margin: 3vh 3vw;
   border: 2px solid gray;
   border-radius: 5px;
   box-shadow: inset 0 0 1em black;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
-ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-head {
+  background-color: rgba(105, 105, 105);
+  color: whitesmoke;
+  position: sticky;
+  top: 0;
+}
+
+.table-head th {
+  padding: 8px 0 5px 0;
 }
 
 .rsvtn-wrapper {
   width: calc(100% - 50px - 1px);
-  padding: 20px 25px;
-  margin: 2px 1px;
   background-color: #ababab;
-  border-radius: 2px;
   cursor: pointer;
   user-select: none;
 }
 
-.rsvtn-wrapper:first-of-type {
-  margin-top: 1px;
+.rsvtn-wrapper:hover {
+  background-color: #868686;
 }
 
-.rsvtn-wrapper:last-of-type {
-  margin-bottom: 1px;
+.param-wrapper {
+  padding: 15px 5px;
+  border-bottom: 1px solid black;
+}
+
+.rsvtn-wrapper:first-of-type .param-wrapper {
+  border-top: 1px solid black;
+}
+
+.active {
+  font-weight: bold;
+  background-color: #aaaaaa;
+}
+
+.info {
+  color: lightgray;
+  font-weight: bold;
 }
 
 .param-wrapper img {
@@ -142,15 +200,6 @@ ul {
 
 .rsvtn-wrapper:hover {
   background-color: #868686;
-}
-
-.rsvtn-param.isVerified{
-  display: none;
-}
-
-.param-wrapper {
-  display: flex;
-  justify-content: space-between;
 }
 
 /* --- Tooltip ---
@@ -174,7 +223,7 @@ styles imported from:
 
   /* Position the tooltip */
   position: absolute;
-  left: -300%;
+  left: -200%;
   z-index: 1;
 }
 
@@ -199,19 +248,19 @@ styles imported from:
   https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/
 */
 
-.list-wrapper::-webkit-scrollbar-track
+.card-wrapper::-webkit-scrollbar-track
 {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
   background-color: #F5F5F5;
 }
 
-.list-wrapper::-webkit-scrollbar
+.card-wrapper::-webkit-scrollbar
 {
   width: 10px;
   background-color: #F5F5F5;
 }
 
-.list-wrapper::-webkit-scrollbar-thumb
+.card-wrapper::-webkit-scrollbar-thumb
 {
   background-color: rgb(18, 18, 18);
   border: 2px solid dimgray;
