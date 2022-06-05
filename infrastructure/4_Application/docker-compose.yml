@@ -1,0 +1,28 @@
+# VAMS App
+
+version: '3.7'
+services:
+  vamsbe:
+    container_name: vamsbe
+    image: vamsbe:latest
+    restart: always
+    tty: true
+    networks:
+      static-net:
+        ipv4_address: 172.18.0.5
+  vamsfe:
+    container_name: vamsfe
+    image: vamsfe:latest
+    restart: always
+    tty: true
+    networks:
+      static-net:
+        ipv4_address: 172.18.0.6
+
+networks:
+  static-net:
+    external: true
+
+
+
+    

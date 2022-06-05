@@ -1,0 +1,23 @@
+# VAMS DB CONFIG
+
+version: '3.7'
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_USER: root
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: password
+    networks:
+      static-net:
+        ipv4_address: 172.18.0.2
+
+networks:
+  static-net:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.18.0.0/16
+

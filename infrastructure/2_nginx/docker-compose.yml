@@ -1,0 +1,30 @@
+# VAMS nginx Config
+
+version: '3.7'
+services:
+  nginx:
+    container_name: nginx
+    image: jc21/nginx-proxy-manager:latest
+    restart: always
+    ports:
+      - '80:80'
+      - '8081:81'
+      - '443:443'
+    networks:
+      static-net:
+        ipv4_address: 172.18.0.4
+    environment:
+      DB_MYSQL_HOST: "172.18.0.2"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "enginx"
+      DB_MYSQL_PASSWORD: "password"
+      DB_MYSQL_NAME: "nginx"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+networks:
+  static-net:
+    external: true
+
+    

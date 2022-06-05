@@ -1,0 +1,21 @@
+# VAMS phpMyAdmin CONFIG
+
+version: '3.7'
+services:
+  phpmyadmin:
+    container_name: myadmin
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      PMA_HOST: 172.18.0.2
+    networks:
+      static-net:
+        ipv4_address: 172.18.0.3
+
+networks:
+  static-net:
+    external: true
+
+
+
+
